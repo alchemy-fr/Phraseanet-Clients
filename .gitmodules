@@ -1,0 +1,3 @@
+[submodule "PHP/CurlWrapper"]
+	path = PHP/CurlWrapper
+	url = git://github.com/Svyatov/CurlWrapper
