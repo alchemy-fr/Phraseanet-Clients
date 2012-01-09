@@ -117,13 +117,13 @@ class PhraseanetClientApi extends PhraseanetApi
    * Choosen grant type
    * @var string 
    */
-  protected $grant_type;
+  protected $grantType;
 
   /**
    * Associated infos to the choosen grant type
    * @var array 
    */
-  protected $grant_info;
+  protected $grantInfo;
 
   /**
    * To create an API key/secret pair, go to your account adminstation panel
@@ -156,7 +156,7 @@ class PhraseanetClientApi extends PhraseanetApi
    */
   public function getAccessToken()
   {
-    return '7ce736eab3484e36b1b690dade997e80';
+    return null;
   }
 
   /**
@@ -164,7 +164,7 @@ class PhraseanetClientApi extends PhraseanetApi
    */
   public function setAccessToken($token)
   {
-    return;
+    return $this;
   }
 
   /**
