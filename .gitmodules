@@ -1,3 +1,6 @@
 [submodule "PHP/CurlWrapper"]
 	path = PHP/CurlWrapper
 	url = git://github.com/Svyatov/CurlWrapper
+[submodule "vendor/qunit"]
+	path = vendor/qunit
+	url = https://github.com/jquery/qunit
