@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="../../vendor/qunit/qunit/qunit.js"></script>
+    <script src="../Phraseanet.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
+    <script>  $(document).ready(function(){
+    
+      module("Instanciation");
+      
+      test("Selection instanciation", function() {
+        var phrasea = new Phraseanet();
+        equal( '0.1', phrasea.getVersion(), "Version is 1.0" );
+      });
+
+      
+    });
+    </script>
+  </head>
+  <body>
+    <h1 id="qunit-header">Phraseanet.JS</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture">test markup, will be hidden</div>
+  </body>
+</html>
