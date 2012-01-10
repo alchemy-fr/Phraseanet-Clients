@@ -7,16 +7,45 @@
     <script src="../../vendor/qunit/qunit/qunit.js"></script>
     <script src="../Phraseanet.js"></script>
     <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
-    <script>  $(document).ready(function(){
+    <script>  jQuery(document).ready(function(){
     
-      module("Instanciation");
+      module("Phraseanet instanciation");
       
-      test("Selection instanciation", function() {
-        var phrasea = new Phraseanet();
-        equal( '0.1', phrasea.getVersion(), "Version is 1.0" );
+      
+      test("Phraseanet instanciation", function() {
+        var phrasea = new Phraseanet({
+        	apiKey: "1234567890",
+        	domain: "http://sub.domain.tld"
+        });
+        equal( '0.1', phrasea.getVersion(), "Version is 0.1" );
+        equal( '1234567890', phrasea.apiKey, "Api key equals 1234567890" );
+        equal( 'http://sub.domain.tld', phrasea.domain.instance, "Instance equals http://sub.domain.tld" );
+        equal(null, phrasea.getSession(), "session is null")
+        
+        
+		raises(function() {
+    		var instance = new Phraseanet();
+  		}, "must throw exception to pass");        
       });
 
-      
+      module("Phraseanet query formater");
+
+
+		test("test encode", function() {
+			var phrasea = new Phraseanet({
+        		apiKey: "1234567890",
+        		domain: "http://sub.domain.tld"
+        	});
+		
+			
+			var str = phrasea.query_formater.encode();
+  			equal("",str, "str is an empty string");
+  			
+  			var str = phrasea.query_formater.encode({
+				"key?:" : " /?:<>&"
+			});
+  			equal("key%3F%3A=%20%2F%3F%3A%3C%3E%26", str, "parameters are encoded");
+		});
     });
     </script>
   </head>
