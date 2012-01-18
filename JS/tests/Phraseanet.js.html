@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="../../vendor/qunit/qunit/qunit.js"></script>
-    <script src="../Phraseanet.js"></script>
+    <script src="../Phraseanet-2.js"></script>
+    <script src="../cookie.js"></script>
     <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
     <script>  jQuery(document).ready(function(){
     
@@ -17,10 +18,13 @@
         	apiKey: "1234567890",
         	domain: "http://sub.domain.tld"
         });
+        
+        var session = new Object();
+
         equal( '0.1', phrasea.getVersion(), "Version is 0.1" );
-        equal( '1234567890', phrasea.apiKey, "Api key equals 1234567890" );
-        equal( 'http://sub.domain.tld', phrasea.domain.instance, "Instance equals http://sub.domain.tld" );
-        equal(null, phrasea.getSession(), "session is null")
+        equal( '1234567890', phrasea._apiKey, "Api key equals 1234567890" );
+        equal( 'http://sub.domain.tld', phrasea._domain.www, "Instance equals http://sub.domain.tld" );
+        deepEqual( session, phrasea.getSession() , "session is empty object")
         
         
 		raises(function() {
@@ -38,15 +42,53 @@
         	});
 		
 			
-			var str = phrasea.query_formater.encode();
+			var str = phrasea._query_formater.encode();
   			equal("",str, "str is an empty string");
   			
-  			var str = phrasea.query_formater.encode({
+  			var str = phrasea._query_formater.encode({
 				"key?:" : " /?:<>&"
 			});
   			equal("key%3F%3A=%20%2F%3F%3A%3C%3E%26", str, "parameters are encoded");
 		});
+	
+		test("test decode", function() {
+		
+			var phrasea = new Phraseanet({
+				apiKey: "2345663",
+				domain: "http:// totoenshort.com"
+			});
+			
+			var titi = phrasea._query_formater.decode("");
+			deepEqual(titi, new Object());
+			
+			var phrasea = new Phraseanet({
+				apiKey: "2345663",
+				domain: "http:// totoenshort.com"
+			});
+			
+			var titi = phrasea._query_formater.decode("test");
+			deepEqual( titi, {"test" : ""});
+			
+			var toto = phrasea._query_formater.decode("access_token=FJQbwq9&expires_in=3600");
+			var expected = {
+				access_token: "FJQbwq9",
+				expires_in: "3600"
+			};
+			
+			deepEqual(expected, toto);
+	
+		});
+		
+		test("test cookie", function() {
+		
+			var cookie test = new Cookie({
+				
+			});
+		
+		});
+		
     });
+    
     </script>
   </head>
   <body>
