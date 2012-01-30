@@ -8,7 +8,8 @@
     <script src="../Phraseanet-2.js"></script>
     <script src="../cookie.js"></script>
     <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
-    <script>  jQuery(document).ready(function(){
+    <script>  
+        jQuery(document).ready(function(){
     
       module("Phraseanet instanciation");
       
@@ -78,13 +79,74 @@
 			deepEqual(expected, toto);
 	
 		});
+	
+		module("Gestion des cookies");
 		
-		test("test cookie", function() {
-		
-			var cookie test = new Cookie({
-				
+		test("Test cookie", function() {
+			var phrasea = new Phraseanet({
+				apiKey: "2345663",
+				domain: "http://my.domain.tld"
 			});
-		
+			
+			var session = {
+				access_token:'toto'
+			};
+			
+			phrasea.setSession(session);
+			
+			var cookie = new Cookie(phrasea);
+			
+			// Test instanciation objet Cookie
+			deepEqual(cookie._phraseanet._apiKey, "2345663", "Instanciation ok");
+			
+			cookie.set();
+			
+                        
+			deepEqual(cookie.get(), session, "Get cookie ok");
+
+                        cookie.clear();
+                        
+                        equal(null, cookie.get());
+//                        
+                        phrasea.setSession(null);
+                        
+                        document.cookie = 'phr_2345663=access_token=123456';
+//                        
+console.log(document.cookie);
+
+                        cookie.load();
+                        
+                        console.log(cookie._phraseanet);
+                        equal(cookie._phraseanet.getSession(), {access_token: "123456"});
+//                        
+//                        cookie.setRaw('access_token=56789');
+//                        
+//                        equal(cookie.get(), {access_token: "56789"});
+                        
+//			var cookie2 = new Cookie(phrasea);
+//			
+//			cookie2.load();
+//			
+//			// Test load cookie dans un nouveau phrasea2/cookie2
+//			deepEqual(phrasea2.getSession(), session, "Load cookie with correct api key ok");
+//			
+//			var phrasea3 = new Phraseanet({
+//				apiKey: "123",
+//				domain: ""
+//			});
+//			
+//			var cookie3 = new Cookie(phrasea3);
+//			
+//			cookie3.load();
+//			
+//			// Test load cookie dans un nouveau phrasea3/cookie3 => ne doit pas fonctionner
+//			deepEqual(phrasea3.getSession(), {}, "Load cookie with wrong api key ok");
+//			
+//			cookie.clear();
+//			
+//			// Test clear cookie
+//			ok(document.cookie.indexOf('phr_2345663="access_token=toto"') == -1, "Clear cookie ok");
+			
 		});
 		
     });
