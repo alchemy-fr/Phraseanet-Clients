@@ -54,10 +54,10 @@
             {
                 redirect_uri: window.location.href,
                 response_type: 'token',
-                client_id: phraseanet._apiKey
+                client_id: this._phraseanet._apiKey
             }
 				
-            return phraseanet._domain.authorize + '?' + phraseanet._query_formater.encode(jQuery.extend(auth_params, options), '&', true);
+            return this._phraseanet._domain.authorize + '?' + this._phraseanet._query_formater.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
@@ -65,10 +65,10 @@
         {
             var fragment = window.location.hash.replace('%23', '#').replace('#', '');
 				
-            return phraseanet._query_formater.decode(fragment);
+            return this._phraseanet._query_formater.decode(fragment);
         },
 
-		/** Initialise la session */
+        /** Initialise la session */
         initSession: function()
         {
             var fragment = this.readFragment();
@@ -76,23 +76,28 @@
             if (fragment)
             {
                 if ('error' in fragment)
-                    throw ('Received auth error `' + fragment.error + '\': ' + fragment.error_description);					
+                {
+                    throw ('Received auth error `' + fragment.error + '\': ' + fragment.error_description);
+                }
+                
                 if ('access_token' in fragment)
                 {
                     var session =
                     {
-                        access_token: fragment.access_token,
-                        user: phraseanet._apiKey
+                        oauth_token: fragment.access_token,
+                        user: this._phraseanet._apiKey
                     };
 						
-                    phraseanet.setSession(session);
-                    phraseanet._cookie.set();
+                    this._phraseanet.setSession(session);
+                    this._phraseanet._cookie.set();
 						
-                    return;
+                    return true;
                 }
             }
+            
+            return false;
         }
-	};
+    };
     
     window.Auth = Auth;
 

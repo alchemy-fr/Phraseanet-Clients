@@ -25,8 +25,6 @@
  * 
 **/
 
-
-
 (function(window)
 {
 
@@ -65,17 +63,20 @@
         {
             www: domain,
             authorize: domain + "/api/oauthv2/authorize",
-            token: domain + "/api/oauthv2/token",
+            token: domain + "/api/oauthv2/token"
         };
 	    
+        /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
+        this._query_formater = new QF(this);
             
-        /** Initialise la session */
-        this._session = {} || options.session || this._cookie.get();
-        
+             
         this._cookie = new Cookie(this);
         
-        this._auth = new Auth(this);
+        /** Initialise la session */
+        this._session = options.session || this._cookie.get() || {};
         
+        
+        this._auth = new Auth(this);
 		
         /** Permet de requêter le serveur */
         this._server = new ApiServer(this);
@@ -111,22 +112,24 @@
             return this._cookie;
         },
 		
-        /** Retourne l'objet Auth associé à l'objet Phraseanet courant */
-        getAuth: function()
+        getAuthenticationUrl : function()
         {
-            return this._auth;
+            return this._auth.buildAuthUrl();  
         },
-		
+        
         /** Retourne le status connecté ou non de l'utilisateur */
-        getStatus: function()
+        isConnected: function()
         {
-            return this._session.access_token != null;
+            return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
 		
         /** Permet à un utilisateur de se connecter */
         login: function(options)
         {
-            this.redirectTo(this._auth.buildAuthUrl(this, options));
+            if(!this._auth.initSession())
+            {
+                this.redirectTo(this._auth.buildAuthUrl(options));
+            }
         },
 		
         redirectTo: function(url)
@@ -144,14 +147,9 @@
         /** Permet de faire les requêtes sur le serveur */
         api: function(path, method, params, callback)
         {
-        	this._server.call(path, method, params, callback);
-        },
-
-        /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
-        _query_formater: function()
-        {
-            return new QF();
+            this._server.call(path, method, params, callback);
         }
+
     };
 	
 })(window);

@@ -88,12 +88,9 @@
 		 */
         setRaw: function(value, timestamp)
         {
-            var domain = this._phraseanet._domain.www;
-            
             document.cookie = 'phr_' + this._phraseanet._apiKey + '="' + value + '"'
             + (value && timestamp == 0 ? '' : '; expires=' + new Date(timestamp * 1000).toGMTString())
-            + '; path=/'
-            //                        + (domain ? '; domain=.' + domain : '');
+            + '; path=/';
         },
 		
         /**

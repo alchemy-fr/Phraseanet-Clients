@@ -33,7 +33,9 @@
 {
 
     /**
-	 * Constructeur de l'API serveur
+	 * Constructeur de l'objet API serveur
+	 * 
+	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
 	 */
     var ApiServer = function(phraseanet)
     {
@@ -53,22 +55,26 @@
 		 */
         call: function(path, method, params, callback)
         {
-        	if (path[0] === '/')
-        	{
-            	path = path.substr(1);
+            if (path[0] !== '/')
+            {
+                path = "/" + path;
             }
         	
-        	var method = method.toLowerCase();
+            var method = method.toLowerCase();
         	
-        	if (method !== 'get' && method !== 'post')
-        		throw ('Invalid method passed to api(). Only GET or POST method are allowed.');
+            if (method !== 'get' && method !== 'post')
+            {
+                throw ('Invalid method passed to api(). Only GET or POST method are allowed.');
+            }
         	        	
-        	var params = params || {};
+            var params = params || {};
         	
-        	if (typeof callback !== 'function')
-        		throw ('Invalid callback parameter passed to api(). Only a function is allowed.');
+            if (typeof callback !== 'function')
+            {
+                throw ('Invalid callback parameter passed to api(). Only a function is allowed.');
+            }
         	
-        	this.oauthRequest(path, method, params, callback);
+            return this.oauthRequest(path, method, params, callback);
         },
         
         /**
@@ -81,13 +87,30 @@
 		 */
         oauthRequest: function(path, method, params, callback)
         {
-        	var session = this._phraseanet.getSession();
+            var session = this._phraseanet.getSession();
         	
-        	if (session && session.access_token && !params.access_token)
-        		params.access_token = session.access_token;
+            if (session && session.oauth_token && !params.oauth_token)
+            {
+                params.oauth_token = session.oauth_token;
+            }
         	
-        	this.jsonp(path, method, params, callback);
+            return this.PhrRequest(path, method, params, callback);
         },
+        
+        PhrRequest: function(path, method, params, callback)
+        {
+            var target = this._phraseanet._domain.www + path + "?callback=?";
 
-	};
-}
+            $.ajax({
+                type: method,
+                dataType: "jsonp",
+                url: target,
+                data: params,
+                success : callback
+            });
+        }
+    };
+
+    window.ApiServer = ApiServer;
+
+})(window);
