@@ -69,9 +69,8 @@
         };
 	    
             
-        /** Objet session */
+        /** Initialise la session */
         this._session = {} || options.session || this._cookie.get();
-        
         
         this._cookie = new Cookie(this);
         
@@ -79,12 +78,8 @@
         
 		
         /** Permet de requêter le serveur */
-        this._server =
-        {		
-     		// TODO 
-        };
+        this._server = new ApiServer(this);
 		
-
     };
 	
     /** Prototype de l'objet Phraseanet */
@@ -100,7 +95,7 @@
             return this._version;
         },
 		
-        /** Retourne l'objet session courant */
+        /** Set et retourne l'objet session courant */
         setSession: function(session)
         {
             this._session = session;
@@ -149,10 +144,12 @@
         /** Permet de faire les requêtes sur le serveur */
         api: function(path, method, params, callback)
         {
-        //TODO
+        	this._server.call(path, method, params, callback);
         },
-		
-        _query_formater: function(){
+
+        /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
+        _query_formater: function()
+        {
             return new QF();
         }
     };
