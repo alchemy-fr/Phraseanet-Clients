@@ -75,12 +75,13 @@
         /** Initialise la session */
         this._session = options.session || this._cookie.get() || {};
         
-        
         this._auth = new Auth(this);
 		
         /** Permet de requêter le serveur */
         this._server = new ApiServer(this);
-		
+        
+        /** Retourne l'objet Tools associé à l'objet Phraseanet courant */
+		this._tools = new Tools(this);
     };
 	
     /** Prototype de l'objet Phraseanet */
@@ -108,7 +109,7 @@
         },
 		
         getCookie: function()
-        {
+        {						
             return this._cookie;
         },
 		
@@ -126,15 +127,18 @@
         /** Permet à un utilisateur de se connecter */
         login: function(options)
         {
-            if(!this._auth.initSession())
+            var fragment = this.readFragment(window.location.hash);
+            if(!this._auth.initSession(fragment))
             {
-                this.redirectTo(this._auth.buildAuthUrl(options));
+                if(options.display && options.display === "popup")
+                {
+                	this._tools.popup(this._auth.buildAuthUrl(options), "Phraseanet Authentication");
+                }
+                else
+                {
+                	this._tools.redirectTo(this._auth.buildAuthUrl(options));
+                }
             }
-        },
-		
-        redirectTo: function(url)
-        {
-            window.location.href = url;
         },
 		
         /** Permet à un utilisateur de se déconnecter */

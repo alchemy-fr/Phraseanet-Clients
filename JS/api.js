@@ -55,11 +55,8 @@
 		 */
         call: function(path, method, params, callback)
         {
-            if (path[0] !== '/')
-            {
-                path = "/" + path;
-            }
-        	
+            var path = this.addFirstSlash(path);
+            
             var method = method.toLowerCase();
         	
             if (method !== 'get' && method !== 'post')
@@ -76,6 +73,16 @@
         	
             return this.oauthRequest(path, method, params, callback);
         },
+        
+        addFirstSlash: function(path)
+        {
+	        if (path[0] !== '/')
+	        {
+	            path = "/" + path;
+	        }
+	        
+	        return path;
+        },	
         
         /**
 		 * Effectue un appel serveur en lui ajoutant le token d'accès.

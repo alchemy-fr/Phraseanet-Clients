@@ -46,7 +46,7 @@
     {
 		
 			
-        /** Construit l'url de réponse d'authentification */
+        /** Construit l'url d'authentification */
         buildAuthUrl: function (options)
         {
             var options = options || {};
@@ -56,23 +56,21 @@
                 response_type: 'token',
                 client_id: this._phraseanet._apiKey
             }
-				
+			            
             return this._phraseanet._domain.authorize + '?' + this._phraseanet._query_formater.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
-        readFragment: function()
+        readFragment: function(hash)
         {
-            var fragment = window.location.hash.replace('%23', '#').replace('#', '');
-				
+            var fragment = hash.replace('%23', '#').replace('#', '');
+			
             return this._phraseanet._query_formater.decode(fragment);
         },
 
         /** Initialise la session */
-        initSession: function()
-        {
-            var fragment = this.readFragment();
-				
+        initSession: function(fragment)
+        {				
             if (fragment)
             {
                 if ('error' in fragment)
