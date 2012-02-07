@@ -4,6 +4,7 @@
     <script type="text/javascript" src="cookie.js"></script>
     <script type="text/javascript" src="auth.js"></script>
     <script type="text/javascript" src="api.js"></script>
+    <script type="text/javascript" src="tools.js"></script>
     <script type="text/javascript" src="queryFormater.js"></script>    
     <script type="text/javascript">
 	
@@ -25,14 +26,11 @@
         
         	//popup("http://www.google.fr", "_blank");
         	
-        	//var phi = new Phraseanet({});
+        	var phi = new Phraseanet({domain:"dev.phrasea.net", apiKey :"6e607b012cc71a6a0ab9670816967e3f"});
         	
-        	//phi.login({display:"popup"});
+                console.log(phi.getOptions());
         	
-        	var titi = {};
-        	console.log(titi.display);
-        	if(titi.display)
-        		console.log("hello");
+        	
         });
 	
 

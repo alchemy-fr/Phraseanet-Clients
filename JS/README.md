@@ -18,7 +18,7 @@ var myInstance = PHRASEA.registerInstance(name, domain, apiKey);
 ```
 var instancesList = PHRASEA.getInstances();
 var instance;
-while (instance = instanceList.hasNext())
+while (instance = instancesList.hasNext())
 {
     //the current instance
 }
