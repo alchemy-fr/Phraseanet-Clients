@@ -96,7 +96,7 @@
             return false;
         }
     };
-    
+
     window.Auth = Auth;
 
 })(window);

@@ -35,9 +35,9 @@
     /**
 	 * Constructeur de l'objet QF
 	 */
-    var QF = function(phraseanet)
+    var QF = function()
     {
-        this._phraseanet = phraseanet;
+        
     };
 
     QF.prototype =

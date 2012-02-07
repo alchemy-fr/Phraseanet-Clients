@@ -44,14 +44,19 @@
         var options = options || {};
 		
         if ("apiKey" in options === false)
+        {
             throw ("You must provide an api key to use phraseanet API");
-		
+        }		
 			
         if ("domain" in options === false)
+        {
             throw ("Missing domain argument for phraseanet object");
+        }
 		
         if (typeof options !== 'object')
+        {
             throw ('Invalid options for phraseanet object');
+        }
 		
         /** Initialise les propriétés de l'objet Phraseanet */
 		
@@ -75,13 +80,14 @@
         /** Initialise la session */
         this._session = options.session || this._cookie.get() || {};
         
+        /** Objet authentification **/
         this._auth = new Auth(this);
 		
         /** Permet de requêter le serveur */
         this._server = new ApiServer(this);
         
         /** Retourne l'objet Tools associé à l'objet Phraseanet courant */
-		this._tools = new Tools(this);
+        this._tools = new Tools(this);
     };
 	
     /** Prototype de l'objet Phraseanet */
@@ -108,6 +114,11 @@
             return this._session;
         },
 		
+        clearSession: function()
+        {
+        	this._session = {};
+        },
+        
         getCookie: function()
         {						
             return this._cookie;
