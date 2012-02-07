@@ -10,7 +10,7 @@ __Please, Do not use this library for the moment.__
 * Register a phraseanet instance
 
 ```
-PHRASEA.registerInstance(name, domain, apiKey);
+var myInstance = PHRASEA.registerInstance(name, domain, apiKey);
 ```
 
 * Get all registered instances from cookies
