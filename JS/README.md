@@ -47,7 +47,7 @@ myInstance.connect({options}, function(response){
 * Request to the instance 
 
 ```
-myInstance.request("/path/", "METHOD", {params}, function(response){
+myInstance.request("/path/", "POST", {params}, function(response){
         var instance = this;
 
         if(Math.floor(response.metas.http_code / 100) <= 3))
@@ -74,4 +74,10 @@ myInstance.logout(function(){
         //logout
     
 });
+```
+
+* Remove the instance
+
+```
+PHRASEA.removeInstance(myInstance);
 ```
