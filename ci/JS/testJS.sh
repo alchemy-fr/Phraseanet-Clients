@@ -54,7 +54,7 @@ echo "";
 echo "";
 testOK=0
 # recursively tests files
-for jsfiles in `ls $sources"www/include/js/tests/"`
+for jsfiles in `ls $sources$pathToTest`
 do
 	echo -n $jsfiles" : ";
 	phantomjs --config=$sources$pathToConf"config.json" $sources$pathToConf"run-qunit.js" $instance/$pathToTest/$jsfiles > /tmp/jsunitphantom
