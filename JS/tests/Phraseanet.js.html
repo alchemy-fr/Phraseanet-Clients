@@ -222,6 +222,41 @@
 				}, "exception levée si le paramètre callback n'est pas une fonction");
 
             });
+
+			
+			module("prelude");
+			
+			test("PHRASEA", function()
+			{
+				notEqual(PHRASEA, undefined, "Existence PHRASEA");
+				
+				var myInstance0 = PHRASEA.registerInstance('tutu', 'http://mon.domain.fr', '789');
+                var myInstance1 = PHRASEA.registerInstance('titi', 'http://mon.domain.fr', '123456');
+                var myInstance2 = PHRASEA.registerInstance('toto', 'http://mon.autre-domain.fr', '123456');
+                
+                notEqual(myInstance0, undefined, "Register instance tutu");
+                notEqual(myInstance1, undefined, "Register instance titi");
+                notEqual(myInstance2, undefined, "Register instance toto");
+				
+				var myInstance3 = PHRASEA.getInstance('tutu');
+				var myInstance4 = PHRASEA.getInstance('titi');
+				var myInstance5 = PHRASEA.getInstance('toto');
+				var myInstance6 = PHRASEA.getInstance('tata');
+				
+				equal(myInstance0, myInstance3, "Get instance tutu");
+                equal(myInstance1, myInstance4, "Get instance titi");
+                equal(myInstance2, myInstance5, "Get instance toto");
+                equal(myInstance6, undefined, "Get instance tata");
+				
+				var iterator = PHRASEA.getInstances();
+				ok(iterator.hasNext(), "getInstances: iterator hasNext()");
+				notEqual(iterator.next(), null, "next()");
+				notEqual(iterator.next(), null, "next()");
+				notEqual(iterator.next(), null, "next()");
+				equal(iterator.next(), null, "next()");
+				ok(!iterator.hasNext(), "getInstances: iterator hasNext()");
+			});
+
 		});
 			
 	    </script>
