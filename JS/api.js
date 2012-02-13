@@ -37,14 +37,12 @@
 	 * 
 	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
 	 */
-    var ApiServer = function(phraseanet)
-    {
+    var ApiServer = function(phraseanet) {
         this._phraseanet = phraseanet;
     };
-	
-    ApiServer.prototype =
-    {
-		
+
+    ApiServer.prototype = {
+
         /**
 		 * Effectue un appel serveur.
 		 * 
@@ -53,37 +51,32 @@
 		 * @param params    {Object}   les paramètres à passer à la requête http
 		 * @param callback  {Function} la fonction callback de retour
 		 */
-        call: function(path, method, params, callback)
-        {
+        call: function(path, method, params, callback) {
             var path = this.addFirstSlash(path);
-            
+
             var method = method.toLowerCase();
-        	
-            if (method !== 'get' && method !== 'post')
-            {
+
+            if (method !== 'get' && method !== 'post') {
                 throw ('Invalid method passed to api(). Only GET or POST method are allowed.');
             }
-        	        	
+
             var params = params || {};
-        	
-            if (typeof callback !== 'function')
-            {
+
+            if (typeof callback !== 'function') {
                 throw ('Invalid callback parameter passed to api(). Only a function is allowed.');
             }
-        	
+
             return this.oauthRequest(path, method, params, callback);
         },
-        
-        addFirstSlash: function(path)
-        {
-	        if (path[0] !== '/')
-	        {
+
+        addFirstSlash: function(path) {
+	        if (path[0] !== '/') {
 	            path = "/" + path;
 	        }
-	        
+
 	        return path;
         },	
-        
+
         /**
 		 * Effectue un appel serveur en lui ajoutant le token d'accès.
 		 * 
@@ -92,20 +85,17 @@
 		 * @param params    {Object}   les paramètres à passer à la requête http
 		 * @param callback  {Function} la fonction callback de retour
 		 */
-        oauthRequest: function(path, method, params, callback)
-        {
+        oauthRequest: function(path, method, params, callback) {
             var session = this._phraseanet.getSession();
-        	
-            if (session && session.oauth_token && !params.oauth_token)
-            {
+
+            if (session && session.oauth_token && !params.oauth_token) {
                 params.oauth_token = session.oauth_token;
             }
-        	
+
             return this.PhrRequest(path, method, params, callback);
         },
-        
-        PhrRequest: function(path, method, params, callback)
-        {
+
+        PhrRequest: function(path, method, params, callback) {
             var target = this._phraseanet._domain.www + path + "?callback=?";
 
             $.ajax({

@@ -29,20 +29,15 @@
  * Phraseanet - Objet QF qui permet d'encoder et de décoder des paramètres oauth2
  */
 
-(function(window)
-{
+(function(window) {
 
     /**
 	 * Constructeur de l'objet QF
 	 */
-    var QF = function()
-    {
-        
-    };
+    var QF = function() {};
 
-    QF.prototype =
-    {
-		
+    QF.prototype = {
+
         /**
         * Encode les paramètres en une chaine de requête
         * 			 
@@ -51,8 +46,7 @@
         * @param {Boolean} encode Indique si la key/value doit être en URI encodée
         * @returns {String} La chaîne de requête
         */
-        encode: function(params, sep, encode)
-        {
+        encode: function(params, sep, encode) {
             params = params || {};
             sep = sep === undefined ? '&' : sep;
             encode = encode === false ? function(s) {
@@ -60,43 +54,38 @@
             } : encodeURIComponent;
             var pairs = new Array();
 
-            jQuery.each(params, function(key, value)
-            {
-                if (value !== null)
-                {
+            jQuery.each(params, function(key, value) {
+                if (value !== null) {
                     pairs.push(encode(key) + '=' + encode(value));
                 }
             });
             pairs.sort();
             return pairs.join(sep);
         },
-			
+
         /**
         * Décode une chaîne de requête en un objet de paramètres
         * 			 
         * @param {String} str La chaine de requête
         * @returns {Object} Paramètres à encoder
         */
-        decode: function(str)
-        {
+        decode: function(str) {
             var	decode = decodeURIComponent,
             params = {},
             parts = str.split('&'),
             i,
             pair;
-					
-            for (i = 0; i < parts.length; i++)
-            {
+
+            for (i = 0; i < parts.length; i++) {
                 pair = parts[i].split('=', 2);
-                if (pair && pair[0])
-                {
+                if (pair && pair[0]) {
                     params[decode(pair[0])] = pair[1] ? decode(pair[1].replace(/\+/g, '%20')) : '';
                 }
             }
             return params;
         }
     };
-    
+
     window.QF = QF;
 
 })(window);

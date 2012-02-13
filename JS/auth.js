@@ -29,70 +29,58 @@
  * Phraseanet - Gestion du processus d'authentification
  */
 
-(function(window)
-{
+(function(window) {
 
     /**
 	 * Constructeur de l'objet Auth
 	 * 
 	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Auth
 	 */
-    var Auth = function(phraseanet)
-    {
+    var Auth = function(phraseanet) {
         this._phraseanet = phraseanet;
     };
-	
-    Auth.prototype =
-    {
-		
-			
+
+    Auth.prototype = {
+
         /** Construit l'url d'authentification */
-        buildAuthUrl: function (options)
-        {
+        buildAuthUrl: function(options) {
             var options = options || {};
-            var auth_params =
-            {
+            var auth_params = {
                 redirect_uri: window.location.href,
                 response_type: 'token',
                 client_id: this._phraseanet._apiKey
             }
-			            
+
             return this._phraseanet._domain.authorize + '?' + this._phraseanet._query_formater.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
-        readFragment: function(hash)
-        {
+        readFragment: function(hash) {
             var fragment = hash.replace('%23', '#').replace('#', '');
 			
             return this._phraseanet._query_formater.decode(fragment);
         },
 
         /** Initialise la session */
-        initSession: function(fragment)
-        {				
-            if (fragment)
-            {
-                if ('error' in fragment)
-                {
+        initSession: function(fragment) {				
+            if (fragment) {
+                if ('error' in fragment) {
                     throw ('Received auth error `' + fragment.error + '\': ' + fragment.error_description);
                 }
-                
-                if ('access_token' in fragment)
-                {
-                    var session =
-                    {
+
+                if ('access_token' in fragment) {
+                    var session = {
                         oauth_token: fragment.access_token,
                         user: this._phraseanet._apiKey
                     };
-						
+
                     this._phraseanet.setSession(session);
                     this._phraseanet._cookie.set();
-						
+
                     return true;
                 }
             }
-            
+
             return false;
         }
     };
