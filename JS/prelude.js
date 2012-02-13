@@ -27,38 +27,36 @@
 
 (function(window) {
 	
-//	if (!window.PHRASEA) {
+	if (!window.PHRASEA) {
 		
 		window.PHRASEA = {
 			
 			/**
-			 * Objet qui contient les différentes instances de phraseanet.
+			 * Pour chaque pair propriété/valeur de cet objet,
+			 * la propriété correspond au nom de l'instance et
+			 * la valeur correspond à l'instance en elle même.
 			 */
 			_instances: {},
 			
 			/**
-			 * Enregistre une nouvelle instance de phraseanet
+			 * Enregistre une nouvelle instance
 			 *
-			 * @params name {String} identifiant
-			 * @params domain {String} domain
-			 * @params apiKey {String} clé publique
+			 * @param name {String} identifiant
+			 * @param domain {String} domain
+			 * @param apiKey {String} clé publique
 			 */
 			registerInstance: function(name, domain, apiKey) {
 				this._instances[name] = new Phraseanet({
 					apiKey: apiKey,
 					domain: domain
 				});
-				this._instances[name]._auth.initSession(this._instances[name]._auth.readFragment("#access_token=424242"));
-				
-				// juste pour les tests - à supprimer ensuite ?
-				return this._instances[name];
 			},
 	
 			/**
-			 * Retourne l'instance de phraseanet correspondant à l'identifiant donné
+			 * Retourne l'instance correspondant à l'identifiant donné
 			 *
-			 * @params name {String} identifiant
-			 * @return objet phraseanet correspondant ou null
+			 * @param name {String} identifiant
+			 * @return instance de phraseanet ou null
 			 */
 			getInstance: function(name) {
 				return this._instances[name];
@@ -67,41 +65,46 @@
 			/**
 			 * Supprime l'instance en cours en vidant la session
 			 *
-			 * @params name {String} identifiant
-			 * @return objet vide
+			 * @param name {String} identifiant
 			 */
 			removeInstance: function(name) {
-				return this._instances[name]._session = {};
+				var instance = this._instances[name];
+				if (instance != null)
+					instance.clearSession();
 			},
 			
 			/**
-			 * Retourne la liste de toutes les instances,
-			 * la fonction hasNext() retourne l'élément courant et avance à l'élément suivant
+			 * Retourne un itérateur sur la liste de toutes les instances.
+			 * L'itérateur dispose d'une méthode next() retournant l'instance
+			 * suivante ou null s'il n'y en a plus, et d'une méthode hasNext()
+			 * retournant true/false selon qu'il y ait encore une instance
+			 * de phraseanet ou non.			 			 
 			 *
-			 * @return liste des instances
+			 * @return itérateur sur la liste des instances
 			 */
 			getInstances: function() {
 				
-				var list = {};
+				var list = [];
 				
 				for (id in this._instances) {
-					list = list.push(id);
+					list.push(id);
 				}
 	
 				var	i = 0,
 					list = list,
-					length = list.length;			
+					length = list.length,
+					map = this._instances;
 	
 				return {
 					next: function() {
-						var element;
+						var key;
 						
 						if (!this.hasNext()) {
 							return null;
 						}
-						element = list[i];
+						key = list[i];
 						i = i + 1;
-						return element;
+						return map[key];
 					},
 					
 					hasNext: function() {
@@ -112,7 +115,7 @@
 
 		};
 		
-//	};
+	};
 
 })(window);
 

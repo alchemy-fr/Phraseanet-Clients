@@ -134,11 +134,15 @@
         {
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
-		
-        /** Permet à un utilisateur de se connecter */
-        login: function(options)
+        
+        /** Permet de se connecter */
+        connect: function(options, callback)
         {
-            var fragment = this.readFragment(window.location.hash);
+        	// TODO il y a une redirection donc comment on gère la callback ?
+        	
+        	// TODO au retour de la redirection, comment savoir à quelle instance est liée le token ?
+        	
+			var fragment = this._auth.readFragment(window.location.hash);
             if(!this._auth.initSession(fragment))
             {
                 if(options.display && options.display === "popup")
@@ -150,19 +154,19 @@
                 	this._tools.redirectTo(this._auth.buildAuthUrl(options));
                 }
             }
-        },
+		},
 		
+		/** Permet de faire les requêtes sur le serveur */
+		request: function(path, method, params, callback)
+		{
+			this._server.call(path, method, params, callback);
+		},
+				
         /** Permet à un utilisateur de se déconnecter */
         logout: function()
         {
             this._cookie.clear();
             this._session = {};
-        },
-		
-        /** Permet de faire les requêtes sur le serveur */
-        api: function(path, method, params, callback)
-        {
-            this._server.call(path, method, params, callback);
         }
 
     };
