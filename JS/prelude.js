@@ -93,7 +93,6 @@
 				}
 
 				var	i = 0,
-					list = list,
 					length = list.length,
 					map = this._instances;
 
@@ -118,6 +117,6 @@
 
 		};
 
-	};
+	}
 
 })(window);

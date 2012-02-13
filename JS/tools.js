@@ -46,9 +46,9 @@
     {
 		popup: function(url, title, width, height)
 		{
-			var width = width || 500;
-			var height = height || 300;
-			
+			var w = width || 500;
+			var h = height || 300;
+
 			var x = ((($(window).width()) / 2) - (width / 2));
 			var y = ((($(window).height()) / 2) - (height / 2));
 			
