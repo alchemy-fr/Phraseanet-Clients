@@ -25,8 +25,7 @@
  * 
 **/
 
-(function(window)
-{
+(function(window) {
 
     /**
 	* Constructeur de l'objet Phraseanet
@@ -36,25 +35,21 @@
 	* @param {String}	options.apiKey	Clé publique de l'api qui identifie un client
 	* @param {String}	options.domain	Url de l'application
 	*/	 
-    window.Phraseanet = function(options)
-    {
+    window.Phraseanet = function(options) {
 
         /** Vérifie la présence des paramètres */
 
         var options = options || {};
 
-        if ("apiKey" in options === false)
-        {
+        if ("apiKey" in options === false) {
             throw ("You must provide an api key to use phraseanet API");
         }		
 
-        if ("domain" in options === false)
-        {
+        if ("domain" in options === false) {
             throw ("Missing domain argument for phraseanet object");
         }
 
-        if (typeof options !== 'object')
-        {
+        if (typeof options !== 'object') {
             throw ('Invalid options for phraseanet object');
         }
 
@@ -64,8 +59,7 @@
 
         var domain = options.domain.replace(/\/$/, '');
 
-        this._domain =
-        {
+        this._domain = {
             www: domain,
             authorize: domain + "/api/oauthv2/authorize",
             token: domain + "/api/oauthv2/token"
@@ -74,12 +68,13 @@
         /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
         this._query_formater = new QF(this);
 
+        /** Retourne l'objet Cookie associé à l'objet Phraseanet courant */		
         this._cookie = new Cookie(this);
 
         /** Initialise la session */
         this._session = options.session || this._cookie.get() || {};
 
-        /** Objet authentification **/
+        /** Objet d'authentification **/
         this._auth = new Auth(this);
 
         /** Permet de requêter le serveur */
@@ -90,69 +85,87 @@
     };
 
     /** Prototype de l'objet Phraseanet */
-    Phraseanet.prototype =
-    {
+    Phraseanet.prototype = {
 
         /** Version de l'api */		 		
         _version: '0.1',
 
         /** Retourne la version de l'api */
-        getVersion: function()
-        {
+        getVersion: function() {
             return this._version;
         },
 
         /** Set l'objet session courant */
-        setSession: function(session)
-        {
+        setSession: function(session) {
             this._session = session;
         },
 
         /** Récupère l'objet session courant */
-        getSession: function()
-        {
+        getSession: function() {
             return this._session;
         },
 
 		/** Vide l'objet session courant */
-        clearSession: function()
-        {
+        clearSession: function() {
         	this._session = {};
         },
 
 		/** Récupère le cookie */
-        getCookie: function()
-        {						
+        getCookie: function() {						
             return this._cookie;
         },
 
 		/** Récupère l'Url d'authentification */
-        getAuthenticationUrl : function(options)
-        {
+        getAuthenticationUrl : function(options) {
             return this._auth.buildAuthUrl(options);  
         },
 
         /** Retourne le status connecté ou non de l'utilisateur */
-        isConnected: function()
-        {
+        isConnected: function() {
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
 
         /** Permet de se connecter */
-        connect: function(options, callback)
-        {
-			// TODO
+        connect: function(options, callback) {
+
+			if (!this.isConnected()) {
+				var options = options || {};
+				console.log(options);
+
+				/** Obtient l'Url d'authentification */
+				var authUrl = this.getAuthenticationUrl(options);
+				console.log(authUrl);
+	
+				/** Ouvre le formulaire d'authentification soit dans une popup,
+				 * soit dans la même page via une redirection (par défaut)
+				 */
+				if (options.display && options.display === "popup") {
+					PHRASEA.Tools.popup(authUrl, "Phraseanet Authentication");
+					console.log('pop !');
+				}
+				else {
+					PHRASEA.Tools.redirectTo(authUrl);
+					console.log('re-hello');
+				}
+	
+				/** Récupère le fragment contenant le token d'accès */
+				var fragment = this._auth.readFragment(window.location.hash);
+				console.log(fragment);
+				
+				/** Initialise la session à partir du fragment obtenu */
+				this._auth.initSession(fragment);
+				console.log(this._session.oauth_token);
+			}
+
 		},
 
 		/** Permet de faire les requêtes sur le serveur */
-		request: function(path, method, params, callback)
-		{
+		request: function(path, method, params, callback) {
 			this._server.call(path, method, params, callback);
 		},
 
         /** Permet à un utilisateur de se déconnecter */
-        logout: function()
-        {
+        logout: function() {
             this._cookie.clear();
             this._session = {};
         }

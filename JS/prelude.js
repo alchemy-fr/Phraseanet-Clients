@@ -105,7 +105,6 @@
 						}
 						key = list[i];
 						i = i + 1;
-						console.log(map[key]);
 						return map[key];
 					},
 

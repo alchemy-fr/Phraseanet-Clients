@@ -29,34 +29,29 @@
  * Phraseanet -  Tools
  */
 
-(function(window)
-{
+(function(window) {
 
     /**
 	 * Constructeur de l'objet Tools
 	 * 
 	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
 	 */
-    var Tools = function(phraseanet)
-    {
+    var Tools = function(phraseanet) {
         this._phraseanet = phraseanet;
     };
 
-    Tools.prototype =
-    {
-		popup: function(url, title, width, height)
-		{
+    Tools.prototype = {
+		popup: function(url, title, width, height) {
 			var w = width || 500;
 			var h = height || 300;
 
-			var x = ((($(window).width()) / 2) - (width / 2));
-			var y = ((($(window).height()) / 2) - (height / 2));
-			
-			window.open(url, title, "width=" + width + ", height=" + height + ", top=" + y + ", left=" + x);
+			var x = ((($(window).width()) / 2) - (w / 2));
+			var y = ((($(window).height()) / 2) - (h / 2));
+
+			window.open(url, title, "width=" + w + ", height=" + h + ", top=" + y + ", left=" + x);
 		},
 
-        redirectTo: function(url)
-        {
+        redirectTo: function(url) {
             window.location.href = url;
         }
 
