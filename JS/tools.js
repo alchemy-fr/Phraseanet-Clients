@@ -41,7 +41,7 @@
     {
         this._phraseanet = phraseanet;
     };
-	
+
     Tools.prototype =
     {
 		popup: function(url, title, width, height)
@@ -59,9 +59,11 @@
         {
             window.location.href = url;
         }
-		
+
     };
 
     window.Tools = Tools;
+
+    window.PHRASEA.Tools = new Tools();
 
 })(window);

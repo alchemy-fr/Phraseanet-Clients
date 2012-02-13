@@ -38,130 +38,118 @@
 	*/	 
     window.Phraseanet = function(options)
     {
-		
+
         /** Vérifie la présence des paramètres */
-		
+
         var options = options || {};
-		
+
         if ("apiKey" in options === false)
         {
             throw ("You must provide an api key to use phraseanet API");
         }		
-			
+
         if ("domain" in options === false)
         {
             throw ("Missing domain argument for phraseanet object");
         }
-		
+
         if (typeof options !== 'object')
         {
             throw ('Invalid options for phraseanet object');
         }
-		
+
         /** Initialise les propriétés de l'objet Phraseanet */
-		
+
         this._apiKey = options.apiKey;
-		
+
         var domain = options.domain.replace(/\/$/, '');
-		
+
         this._domain =
         {
             www: domain,
             authorize: domain + "/api/oauthv2/authorize",
             token: domain + "/api/oauthv2/token"
         };
-	    
+
         /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
         this._query_formater = new QF(this);
-            
-             
+
         this._cookie = new Cookie(this);
-        
+
         /** Initialise la session */
         this._session = options.session || this._cookie.get() || {};
-        
+
         /** Objet authentification **/
         this._auth = new Auth(this);
-		
+
         /** Permet de requêter le serveur */
         this._server = new ApiServer(this);
-        
+
         /** Retourne l'objet Tools associé à l'objet Phraseanet courant */
         this._tools = new Tools(this);
     };
-	
+
     /** Prototype de l'objet Phraseanet */
     Phraseanet.prototype =
     {
-		
+
         /** Version de l'api */		 		
         _version: '0.1',
-		
+
         /** Retourne la version de l'api */
         getVersion: function()
         {
             return this._version;
         },
-		
-        /** Set et retourne l'objet session courant */
+
+        /** Set l'objet session courant */
         setSession: function(session)
         {
             this._session = session;
         },
-		
+
+        /** Récupère l'objet session courant */
         getSession: function()
         {
             return this._session;
         },
-		
+
+		/** Vide l'objet session courant */
         clearSession: function()
         {
         	this._session = {};
         },
-        
+
+		/** Récupère le cookie */
         getCookie: function()
         {						
             return this._cookie;
         },
-		
-        getAuthenticationUrl : function()
+
+		/** Récupère l'Url d'authentification */
+        getAuthenticationUrl : function(options)
         {
-            return this._auth.buildAuthUrl();  
+            return this._auth.buildAuthUrl(options);  
         },
-        
+
         /** Retourne le status connecté ou non de l'utilisateur */
         isConnected: function()
         {
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
-        
+
         /** Permet de se connecter */
         connect: function(options, callback)
         {
-        	// TODO il y a une redirection donc comment on gère la callback ?
-        	
-        	// TODO au retour de la redirection, comment savoir à quelle instance est liée le token ?
-        	
-			var fragment = this._auth.readFragment(window.location.hash);
-            if(!this._auth.initSession(fragment))
-            {
-                if(options.display && options.display === "popup")
-                {
-                	this._tools.popup(this._auth.buildAuthUrl(options), "Phraseanet Authentication");
-                }
-                else
-                {
-                	this._tools.redirectTo(this._auth.buildAuthUrl(options));
-                }
-            }
+			// TODO
 		},
-		
+
 		/** Permet de faire les requêtes sur le serveur */
 		request: function(path, method, params, callback)
 		{
 			this._server.call(path, method, params, callback);
 		},
-				
+
         /** Permet à un utilisateur de se déconnecter */
         logout: function()
         {
@@ -170,5 +158,5 @@
         }
 
     };
-	
+
 })(window);

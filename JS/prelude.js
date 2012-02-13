@@ -25,19 +25,19 @@
  * 
 **/
 
-(function(window) {
-	
+(function (window) {
+
 	if (!window.PHRASEA) {
-		
+
 		window.PHRASEA = {
-			
+
 			/**
 			 * Pour chaque pair propriété/valeur de cet objet,
 			 * la propriété correspond au nom de l'instance et
 			 * la valeur correspond à l'instance en elle même.
 			 */
 			_instances: {},
-			
+
 			/**
 			 * Enregistre une nouvelle instance
 			 *
@@ -45,78 +45,79 @@
 			 * @param domain {String} domain
 			 * @param apiKey {String} clé publique
 			 */
-			registerInstance: function(name, domain, apiKey) {
+			registerInstance: function (name, domain, apiKey) {
 				this._instances[name] = new Phraseanet({
 					apiKey: apiKey,
 					domain: domain
 				});
+				return this._instances[name];
 			},
-	
+
 			/**
 			 * Retourne l'instance correspondant à l'identifiant donné
 			 *
 			 * @param name {String} identifiant
 			 * @return instance de phraseanet ou null
 			 */
-			getInstance: function(name) {
+			getInstance: function (name) {
 				return this._instances[name];
 			},
-	
+
 			/**
 			 * Supprime l'instance en cours en vidant la session
 			 *
 			 * @param name {String} identifiant
 			 */
-			removeInstance: function(name) {
+			removeInstance: function (name) {
 				var instance = this._instances[name];
-				if (instance != null)
+				if (instance !== null) {
 					instance.clearSession();
+				}
 			},
-			
+
 			/**
 			 * Retourne un itérateur sur la liste de toutes les instances.
 			 * L'itérateur dispose d'une méthode next() retournant l'instance
 			 * suivante ou null s'il n'y en a plus, et d'une méthode hasNext()
 			 * retournant true/false selon qu'il y ait encore une instance
-			 * de phraseanet ou non.			 			 
+			 * de phraseanet ou non
 			 *
 			 * @return itérateur sur la liste des instances
 			 */
-			getInstances: function() {
-				
+			getInstances: function () {
+
 				var list = [];
-				
+
 				for (id in this._instances) {
 					list.push(id);
 				}
-	
+
 				var	i = 0,
 					list = list,
 					length = list.length,
 					map = this._instances;
-	
+
 				return {
-					next: function() {
+					next: function () {
 						var key;
-						
+
 						if (!this.hasNext()) {
 							return null;
 						}
 						key = list[i];
 						i = i + 1;
+						console.log(map[key]);
 						return map[key];
 					},
-					
-					hasNext: function() {
+
+					hasNext: function () {
 						return i < length;
 					}
 				};
 			}
 
 		};
-		
+
 	};
 
 })(window);
-
-
