@@ -65,35 +65,49 @@
             token: domain + "/api/oauthv2/token"
         };
 
-        /** Retourne l'objet QF associé à l'objet Phraseanet courant */		
-        this._query_formater = new QF(this);
-
-        /** Retourne l'objet Cookie associé à l'objet Phraseanet courant */		
-        this._cookie = new Cookie(this);
-
         /** Initialise la session */
-        this._session = options.session || this._cookie.get() || {};
+        this._session = PHRASEA.Cookie.get(this) || {}; // TODO à améliorer ?
 
-        /** Objet d'authentification **/
+        /** Objet d'authentification */
         this._auth = new Auth(this);
 
         /** Permet de requêter le serveur */
         this._server = new ApiServer(this);
-
-        /** Retourne l'objet Tools associé à l'objet Phraseanet courant */
-        this._tools = new Tools(this);
+        
+       	/** Récupère le fragment contenant le token d'accès */
+		var fragment = this._auth.readFragment();
+		console.log(fragment);
+			
+		/** Initialise la session à partir du fragment obtenu */
+		if (fragment && fragment.access_token) {
+			this._session.oauth_token = fragment.access_token; //TODO à améliorer ?
+			PHRASEA.Cookie.set(this, this._session);
+		}
+		//this._auth.initSession(fragment);
+		//console.log(this._session.oauth_token);
     };
 
     /** Prototype de l'objet Phraseanet */
     Phraseanet.prototype = {
 
         /** Version de l'api */		 		
-        _version: '0.1',
+        _version: '1.0',
 
         /** Retourne la version de l'api */
         getVersion: function() {
             return this._version;
         },
+        
+        getApiKey: function() {
+			return this._apiKey;
+		},
+		
+		//TODO à améliorer
+		initSession: function(session) {
+			if (session && session.oauth_token) {
+				this._session.oauth_token = session.oauth_token;
+			}
+		},
 
         /** Set l'objet session courant */
         setSession: function(session) {
@@ -108,11 +122,6 @@
 		/** Vide l'objet session courant */
         clearSession: function() {
         	this._session = {};
-        },
-
-		/** Récupère le cookie */
-        getCookie: function() {						
-            return this._cookie;
         },
 
 		/** Récupère l'Url d'authentification */
@@ -149,12 +158,12 @@
 				}
 	
 				/** Récupère le fragment contenant le token d'accès */
-				var fragment = this._auth.readFragment(window.location.hash);
-				console.log(fragment);
+				//var fragment = this._auth.readFragment(window.location.hash);
+				//console.log(fragment);
 				
 				/** Initialise la session à partir du fragment obtenu */
-				this._auth.initSession(fragment);
-				console.log(this._session.oauth_token);
+				//this._auth.initSession(fragment);
+				//console.log(this._session.oauth_token);
 			}
 
 		},
@@ -166,8 +175,8 @@
 
         /** Permet à un utilisateur de se déconnecter */
         logout: function() {
-            this._cookie.clear();
-            this._session = {};
+            PHRASEA.Cookie.clear(this);
+            this.clearSession();
         }
 
     };

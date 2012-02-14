@@ -50,15 +50,25 @@
                 response_type: 'token',
                 client_id: this._phraseanet._apiKey
             }
+            
+            //TODO setter un cookie pour dire qu'on est en train de se logguer sur ce phraseanet ?
+			PHRASEA.Cookie.setRaw('phr_login', phraseanet.getApiKey(), 1988530800);
 
-            return this._phraseanet._domain.authorize + '?' + this._phraseanet._query_formater.encode(jQuery.extend(auth_params, options), '&', true);
+            return this._phraseanet._domain.authorize + '?' + PHRASEA.QF.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
-        readFragment: function(hash) {
-            var fragment = hash.replace('%23', '#').replace('#', '');
+        readFragment: function() {
+            var fragment;
 			
-            return this._phraseanet._query_formater.decode(fragment);
+			//TODO on est en train de se connecter sur ce phraseanet ?
+			var phr_login = PHRASEA.Cookie.getRaw('phr_login');
+			if (phr_login && phr_login == this.getApiKey()) {
+				fragment = PHRASEA.QF.decode(window.location.hash.replace('%23', '#').replace('#', ''));
+				PHRASEA.Cookie.clearRaw('phr_login');
+			}
+			
+            return fragment;
         },
 
         /** Initialise la session */
@@ -75,7 +85,7 @@
                     };
 
                     this._phraseanet.setSession(session);
-                    this._phraseanet._cookie.set();
+                    //this._phraseanet._cookie.set();
 
                     return true;
                 }

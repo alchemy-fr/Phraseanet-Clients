@@ -31,12 +31,7 @@
 
 (function(window) {
 
-    /**
-	 * Constructeur de l'objet QF
-	 */
-    var QF = function() {};
-
-    QF.prototype = {
+    window.PHRASEA.QF = {
 
         /**
         * Encode les paramètres en une chaine de requête
@@ -85,7 +80,5 @@
             return params;
         }
     };
-
-    window.QF = QF;
 
 })(window);

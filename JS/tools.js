@@ -31,16 +31,8 @@
 
 (function(window) {
 
-    /**
-	 * Constructeur de l'objet Tools
-	 * 
-	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
-	 */
-    var Tools = function(phraseanet) {
-        this._phraseanet = phraseanet;
-    };
+    window.PHRASEA.Tools = {
 
-    Tools.prototype = {
 		popup: function(url, title, width, height) {
 			var w = width || 500;
 			var h = height || 300;
@@ -56,9 +48,5 @@
         }
 
     };
-
-    window.Tools = Tools;
-
-    window.PHRASEA.Tools = new Tools();
 
 })(window);

@@ -31,67 +31,65 @@
 
 (function(window) {
 
-    /**
-	 * Constructeur de l'objet Cookie
-	 * 
-	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
-	 */
-    var Cookie = function(phraseanet) {
-        this._phraseanet = phraseanet;
-    };
-
-    Cookie.prototype = {
-
+    PHRASEA.Cookie = {
+        
+        /**
+		 * Affecte un cookie à l'objet phraseanet courant
+		 */
+        set: function(phraseanet, value) {
+            this.setRaw('phr_' + phraseanet.getApiKey(), PHRASEA.QF.encode(value), 1988530800);
+		},
+		
         /**
 		 * Récupère la session dans les cookies
 		 * 
-		 * @return {Session} session de l'utilisateur connecté
+		 * @return {value} valeur de la session de l'utilisateur connecté
 		 */
-        get: function() {
-            
-            var cookie = document.cookie.match('\\bphr_' + this._phraseanet._apiKey + '="([^;]*)\\b');
-            var session;
-            
-            if (cookie) {
-                session = this._phraseanet._query_formater.decode(cookie[1]);
-            }
+		get: function(phraseanet) {
+			var value = this.getRaw('phr_' + phraseanet.getApiKey());
 			
-            return session;
-        },
-
+			if (value) {
+				value = PHRASEA.QF.decode(value);
+			}
+			
+			return value || {};
+		},
+		
         /**
-		 * Affecte un cookie contenant la session
+		 * Supprime le cookie de l'objet phraseanet courant
 		 */
-        set: function() {
-            var session = this._phraseanet.getSession();
-
-            if (session) {
-                var value = this._phraseanet._query_formater.encode(session);
-                this.setRaw(value, 1988530800);
-            }
-
-        },
-
+		clear: function(phraseanet) {
+			this.clearRaw('phr_' + phraseanet.getApiKey());
+		},
+		
         /**
-		 * Affecte un cookie contenant la valeur spécifiée
+		 * Affecte un cookie contenant les valeurs spécifiées
 		 * 
-		 * @param value {String} la valeur du cookie
+		 * @param name {String} nom du cookie
+		 * @param value {String} valeur du cookie
 		 * @param timestamp {Integer} timestamp pour l'expiration du cookie
 		 */
-        setRaw: function(value, timestamp) {
-            document.cookie = 'phr_' + this._phraseanet._apiKey + '="' + value + '"'
+        setRaw: function(name, value, timestamp) {
+            document.cookie = name + '="' + value + '"'
             + (value && timestamp == 0 ? '' : '; expires=' + new Date(timestamp * 1000).toGMTString())
             + '; path=/';
         },
+        
+        getRaw: function(name) {
+			var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+			
+			if (results)
+				return unescape(results[2]);
+			else
+				return null;
+		},
 
         /**
-		 * Supprime le cookie
+		 * Vide le cookie
 		 */
-        clear: function() {
-            this.setRaw('', 0);
+        clearRaw: function(name) {
+            document.cookie = name + '=""; expires=0; path=/';
         }
     };
-
-    window.Cookie = Cookie;
 
 })(window);
