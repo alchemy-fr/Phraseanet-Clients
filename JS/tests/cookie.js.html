@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>hello world</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <script src="http://code.jquery.com/jquery-latest.js"></script>
+	    <script src="../../vendor/qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" src="../prelude.js"></script>
+	    <script type="text/javascript" src="../tools.js"></script>
+	    <script type="text/javascript" src="../queryFormater.js"></script>    
+	    <script type="text/javascript" src="../cookie.js"></script>
+	    <script type="text/javascript" src="../auth.js"></script>
+	    <script type="text/javascript" src="../api.js"></script>
+	    <script type="text/javascript" src="../Phraseanet.js"></script>
+	    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
+	    <script>  
+		jQuery(document).ready(function()
+		{
+	    			
+			module("Gestion des cookies");
+			
+			test("Test cookie", function()
+			{
+				// test 1 - instanciation coockie
+				var phrasea = new Phraseanet({
+					apiKey: "2345663",
+					domain: "my.domain.tld"
+				});
+					
+				var session = {
+					oauth_token:'toto'
+				};
+				
+				phrasea.setSession(session);
+				
+				//deepEqual(cookie._phraseanet._apiKey, "2345663", "Instanciation cookie ok");
+				
+				// test 2 - get cookie
+				PHRASEA.Cookie.set(phrasea, session);
+				
+				deepEqual(PHRASEA.Cookie.get(phrasea), session, "Get cookie ok");
+				
+				// test 3 - load une nouvelle session avec un cookie deja existant
+				var session2 = PHRASEA.Cookie.get(phrasea);			
+				deepEqual(session2, session, "Load session with cookie ok");
+		
+				// test 4 - load cookie dans un nouveau phrasea2/cookie2
+				var phrasea2 = new Phraseanet({
+					apiKey: "2345663",
+					domain: ""
+				});
+				
+				deepEqual(PHRASEA.Cookie.get(phrasea2), session, "Load cookie with correct api key ok");
+				
+				// test 5 - load cookie dans un nouveau phrasea3/cookie3 => ne doit pas fonctionner car mauvaise apikey
+				var phrasea3 = new Phraseanet({
+					apiKey: "123",
+					domain: ""
+				});
+			
+				deepEqual(PHRASEA.Cookie.get(phrasea3), {}, "Load cookie with wrong api key ok");
+							
+				// test 6 - cookie clear
+				PHRASEA.Cookie.clear(phrasea1);
+				ok(document.cookie.indexOf('phr_2345663="access_token=toto"') == -1, "Clear cookie ok");
+				
+				// test 7 - load session avec un cookie vide
+				//var session4 = PHRASEA.Cookie.get();
+				//notEqual(session4, session, "No load session if empty cookie");				
+			});
+
+		});
+			
+	    </script>
+	</head>
+	<body>
+	    <h1 id="qunit-header">Phraseanet.JS</h1>
+	    <h2 id="qunit-banner"></h2>
+	    <div id="qunit-testrunner-toolbar"></div>
+	    <h2 id="qunit-userAgent"></h2>
+	    <ol id="qunit-tests"></ol>
+	    <div id="qunit-fixture">test markup, will be hidden</div>
+	</body>
+</html>

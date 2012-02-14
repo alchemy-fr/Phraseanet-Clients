@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>hello world</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <script src="http://code.jquery.com/jquery-latest.js"></script>
+	    <script src="../../vendor/qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" src="../prelude.js"></script>
+	    <script type="text/javascript" src="../tools.js"></script>
+	    <script type="text/javascript" src="../queryFormater.js"></script>    
+	    <script type="text/javascript" src="../cookie.js"></script>
+	    <script type="text/javascript" src="../auth.js"></script>
+	    <script type="text/javascript" src="../api.js"></script>
+	    <script type="text/javascript" src="../Phraseanet.js"></script>
+	    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
+	    <script>  
+		jQuery(document).ready(function()
+		{
+                        
+            module("Tests pour l'objet api");
+            
+            test("Test Api", function()
+            {
+            	var Phrasea = new Phraseanet({
+					apiKey: "123456",
+					domain: "http://my.domain.fr"
+				});
+                    
+                // Teste si le path est bien renseigné
+				var path1 = Phrasea._server.addFirstSlash("api/v1/databoxes/list/");				
+				equal(path1, "/api/v1/databoxes/list/", "1er Slash bien ajouté au path");
+				
+				var path2 = Phrasea._server.addFirstSlash("/api/v1/databoxes/list/");
+				equal(path2, "/api/v1/databoxes/list/", "Pas de Slash ajouté au path s'il y en a déjà un");
+                
+                // Teste si une exception est bien levée si la méthode est non renseignée ou mauvaise
+				raises(function()
+				{
+					Phrasea._server.call("/api/v1/databoxes/list/", "", {}, function(){})
+				}, "exception levée si method autre que GET ou POST");
+				
+				raises(function()
+				{
+					Phrasea._server.call("/api/v1/databoxes/list/", "titi", {}, function(){})
+				}, "exception levée si method autre que GET ou POST");
+
+				// Teste si une exception est levée si la fonction callback est mal renseignée
+				raises(function()
+				{
+					Phrasea._server.call("/api/v1/databoxes/list/", "", {}, "hello")
+				}, "exception levée si le paramètre callback n'est pas une fonction");
+
+            });
+
+		});
+			
+	    </script>
+	</head>
+	<body>
+	    <h1 id="qunit-header">Phraseanet.JS</h1>
+	    <h2 id="qunit-banner"></h2>
+	    <div id="qunit-testrunner-toolbar"></div>
+	    <h2 id="qunit-userAgent"></h2>
+	    <ol id="qunit-tests"></ol>
+	    <div id="qunit-fixture">test markup, will be hidden</div>
+	</body>
+</html>

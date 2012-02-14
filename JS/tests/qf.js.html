@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>hello world</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <script src="http://code.jquery.com/jquery-latest.js"></script>
+	    <script src="../../vendor/qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" src="../prelude.js"></script>
+	    <script type="text/javascript" src="../tools.js"></script>
+	    <script type="text/javascript" src="../queryFormater.js"></script>    
+	    <script type="text/javascript" src="../cookie.js"></script>
+	    <script type="text/javascript" src="../auth.js"></script>
+	    <script type="text/javascript" src="../api.js"></script>
+	    <script type="text/javascript" src="../Phraseanet.js"></script>
+	    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
+	    <script>  
+		jQuery(document).ready(function()
+		{
+	    
+			module("Tests pour queryFormater");
+			
+			test("Test encode", function()
+			{
+				var phrasea = new Phraseanet({
+					apiKey: "1234567890",
+					domain: "http://sub.domain.tld"
+				});
+			
+				
+				var str = PHRASEA.QF.encode();
+				equal("",str, "str is an empty string");
+					
+				var str = PHRASEA.QF.encode({
+					"key?:" : " /?:<>&"
+				});
+				equal("key%3F%3A=%20%2F%3F%3A%3C%3E%26", str, "parameters are encoded");
+			});
+			
+			test("Test decode", function()
+			{
+			
+				var phrasea = new Phraseanet({
+					apiKey: "2345663",
+					domain: "http://totoenshort.com"
+				});
+				
+				var titi = PHRASEA.QF.decode("");
+				deepEqual(titi, new Object());
+				
+				var titi = PHRASEA.QF.decode("test");
+				deepEqual( titi, {"test" : ""});
+				
+				var toto = PHRASEA.QF.decode("access_token=FJQbwq9&expires_in=3600");
+				var expected = {
+					access_token: "FJQbwq9",
+					expires_in: "3600"
+				};				
+				deepEqual(expected, toto);
+			
+			});
+
+		});
+			
+	    </script>
+	</head>
+	<body>
+	    <h1 id="qunit-header">Phraseanet.JS</h1>
+	    <h2 id="qunit-banner"></h2>
+	    <div id="qunit-testrunner-toolbar"></div>
+	    <h2 id="qunit-userAgent"></h2>
+	    <ol id="qunit-tests"></ol>
+	    <div id="qunit-fixture">test markup, will be hidden</div>
+	</body>
+</html>

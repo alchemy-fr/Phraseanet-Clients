@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>hello world</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <script src="http://code.jquery.com/jquery-latest.js"></script>
+	    <script src="../../vendor/qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" src="../prelude.js"></script>
+	    <script type="text/javascript" src="../tools.js"></script>
+	    <script type="text/javascript" src="../queryFormater.js"></script>    
+	    <script type="text/javascript" src="../cookie.js"></script>
+	    <script type="text/javascript" src="../auth.js"></script>
+	    <script type="text/javascript" src="../api.js"></script>
+	    <script type="text/javascript" src="../Phraseanet.js"></script>
+	    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
+	    <script>  
+		jQuery(document).ready(function()
+		{
+			
+			module("Tests pour l'objet Auth");
+
+			test("Test Auth", function()
+			{
+				var phr = new Phraseanet({
+					apiKey: "333666",
+					domain: "http://helloworld.com"
+				});
+				
+				// teste la fonction buildAuthUrl sans options
+				var url = phr._auth.buildAuthUrl();
+				
+				equal(url, "http://helloworld.com/api/oauthv2/authorize?client_id=333666&redirect_uri=http%3A%2F%2Flocal.test%2Falchemy%2FPhraseanet-Clients%2FJS%2Ftests%2FPhraseanet.js.html&response_type=token", "url bien construite, sans options");
+				
+				// teste la fonction buildAuthUrl avec options
+				var options = {
+					abcde: "titi",
+					cdefg: "titi",
+					bcdef: "titi"
+				};
+				
+				var url2 = phr._auth.buildAuthUrl(options);
+				
+				equal(url2, "http://helloworld.com/api/oauthv2/authorize?abcde=titi&bcdef=titi&cdefg=titi&client_id=333666&redirect_uri=http%3A%2F%2Flocal.test%2Falchemy%2FPhraseanet-Clients%2FJS%2Ftests%2FPhraseanet.js.html&response_type=token", "url bien construite, avec toutes les options");
+
+				// test la récupération du fragment dans l'url
+				window.location.hash = "access_token=blabla42";
+				var fragment = phr._auth.readFragment();
+
+				deepEqual(fragment, {"access_token" : "blabla42"}, "récupération de l'access_token dans le fragment ok");
+				
+				// test l'initialisation de session avec fragment sans erreur
+				deepEqual(phr._auth.initSession(fragment), true, "Initialisation de session avec fragment ok");
+                                var session = phr.getSession();
+                                equal(session.oauth_token,"blabla42");
+				// test l'initialisation de session sans fragment
+				var urltest2 = "";				
+				
+				deepEqual(phr._auth.initSession(urltest2), false, "Pas de session si pas de fragment");
+
+				// test l'initialisation de session avec fragment avec erreur
+				var urltest3 = "#error=42&error_description=blu";
+				
+				raises(function()
+				{
+					phr._auth.initSession(urltest3)
+				}, "exception levée si erreur dans le fragment");
+
+			});
+			
+		});
+			
+	    </script>
+	</head>
+	<body>
+	    <h1 id="qunit-header">Phraseanet.JS</h1>
+	    <h2 id="qunit-banner"></h2>
+	    <div id="qunit-testrunner-toolbar"></div>
+	    <h2 id="qunit-userAgent"></h2>
+	    <ol id="qunit-tests"></ol>
+	    <div id="qunit-fixture">test markup, will be hidden</div>
+	</body>
+</html>
