@@ -47,7 +47,7 @@
 		 */
 		get: function(phraseanet) {
 			var value = this.getRaw('phr_' + phraseanet.getApiKey());
-			
+
 			if (value) {
 				value = PHRASEA.QF.decode(value);
 			}
@@ -70,18 +70,20 @@
 		 * @param timestamp {Integer} timestamp pour l'expiration du cookie
 		 */
         setRaw: function(name, value, timestamp) {
-            document.cookie = name + '="' + value + '"'
+            document.cookie = name + '=' + escape(value)
             + (value && timestamp == 0 ? '' : '; expires=' + new Date(timestamp * 1000).toGMTString())
             + '; path=/';
         },
         
-        getRaw: function(name) {
+        getRaw: function(name) {			
 			var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
 			
-			if (results)
+			if (results) {
 				return unescape(results[2]);
-			else
+			}
+			else {
 				return null;
+			}
 		},
 
         /**

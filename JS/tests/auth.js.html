@@ -29,18 +29,18 @@
 				// teste la fonction buildAuthUrl sans options
 				var url = phr._auth.buildAuthUrl();
 				
-				equal(url, "http://helloworld.com/api/oauthv2/authorize?client_id=333666&redirect_uri=http%3A%2F%2Flocal.test%2Falchemy%2FPhraseanet-Clients%2FJS%2Ftests%2FPhraseanet.js.html&response_type=token", "url bien construite, sans options");
+				equal(url, "http://helloworld.com/api/oauthv2/authorize?client_id=333666&redirect_uri=" + encodeURIComponent(window.location.href) + "&response_type=token", "url bien construite, sans options");
 				
 				// teste la fonction buildAuthUrl avec options
 				var options = {
 					abcde: "titi",
 					cdefg: "titi",
-					bcdef: "titi"
+					bcdef: "tutu"
 				};
 				
 				var url2 = phr._auth.buildAuthUrl(options);
 				
-				equal(url2, "http://helloworld.com/api/oauthv2/authorize?abcde=titi&bcdef=titi&cdefg=titi&client_id=333666&redirect_uri=http%3A%2F%2Flocal.test%2Falchemy%2FPhraseanet-Clients%2FJS%2Ftests%2FPhraseanet.js.html&response_type=token", "url bien construite, avec toutes les options");
+				equal(url2, "http://helloworld.com/api/oauthv2/authorize?abcde=titi&bcdef=tutu&cdefg=titi&client_id=333666&redirect_uri=" + encodeURIComponent(window.location.href) + "&response_type=token", "url bien construite, avec toutes les options");
 
 				// test la récupération du fragment dans l'url
 				window.location.hash = "access_token=blabla42";
