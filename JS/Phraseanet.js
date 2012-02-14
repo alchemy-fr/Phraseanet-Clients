@@ -37,7 +37,7 @@
 	*/	 
     window.Phraseanet = function(options) {
 
-        /** Vérifie la présence des paramètres */
+        /** Vérifie la présence des paramètres requis */
 
         var options = options || {};
 
@@ -66,7 +66,7 @@
         };
 
         /** Initialise la session */
-        this._session = PHRASEA.Cookie.get(this) || {}; // TODO à améliorer ?
+        this._session = PHRASEA.Cookie.get(this) || {};
 
         /** Objet d'authentification */
         this._auth = new Auth(this);
@@ -82,8 +82,6 @@
 			this._session.oauth_token = fragment.access_token; //TODO à améliorer ?
 			PHRASEA.Cookie.set(this, this._session);
 		}
-		//this._auth.initSession(fragment);
-		//console.log(this._session.oauth_token);
     };
 
     /** Prototype de l'objet Phraseanet */
@@ -97,11 +95,12 @@
             return this._version;
         },
         
+        /** Retourne la ClientID */
         getApiKey: function() {
 			return this._apiKey;
 		},
 		
-		//TODO à améliorer
+        /** Initialise la session */
 		initSession: function(session) {
 			if (session && session.oauth_token) {
 				this._session.oauth_token = session.oauth_token;
@@ -135,36 +134,22 @@
 
         /** Permet de se connecter */
         connect: function(options, callback) {
-
 			if (!this.isConnected()) {
 				var options = options || {};
-				console.log(options);
 
 				/** Obtient l'Url d'authentification */
 				var authUrl = this.getAuthenticationUrl(options);
-				console.log(authUrl);
 	
 				/** Ouvre le formulaire d'authentification soit dans une popup,
 				 * soit dans la même page via une redirection (par défaut)
 				 */
 				if (options.display && options.display === "popup") {
 					PHRASEA.Tools.popup(authUrl, "Phraseanet Authentication");
-					console.log('pop !');
 				}
 				else {
 					PHRASEA.Tools.redirectTo(authUrl);
-					console.log('re-hello');
 				}
-	
-				/** Récupère le fragment contenant le token d'accès */
-				//var fragment = this._auth.readFragment(window.location.hash);
-				//console.log(fragment);
-				
-				/** Initialise la session à partir du fragment obtenu */
-				//this._auth.initSession(fragment);
-				//console.log(this._session.oauth_token);
 			}
-
 		},
 
 		/** Permet de faire les requêtes sur le serveur */

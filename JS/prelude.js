@@ -50,6 +50,7 @@
 					apiKey: apiKey,
 					domain: domain
 				});
+
 				return this._instances[name];
 			},
 
@@ -70,6 +71,7 @@
 			 */
 			removeInstance: function (name) {
 				var instance = this._instances[name];
+
 				if (instance !== null) {
 					instance.clearSession();
 				}
