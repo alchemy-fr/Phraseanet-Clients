@@ -76,7 +76,6 @@
         
        	/** Récupère le fragment contenant le token d'accès */
 		var fragment = this._auth.readFragment();
-		console.log(fragment);
 			
 		/** Initialise la session à partir du fragment obtenu */
 		if (fragment && fragment.access_token) {
