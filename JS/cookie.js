@@ -87,10 +87,11 @@
 		},
 
         /**
-		 * Vide le cookie
+		 * Supprime le cookie nommé
 		 */
         clearRaw: function(name) {
-            document.cookie = name + '=""; expires=0; path=/';
+			this.setRaw(name, "", 0);
+//            document.cookie = name + '=""; expires=0; path=/';
         }
     };
 
