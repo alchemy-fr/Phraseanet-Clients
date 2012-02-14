@@ -144,7 +144,7 @@
 				 * soit dans la même page via une redirection (par défaut)
 				 */
 				if (options.display && options.display === "popup") {
-					PHRASEA.Tools.popup(authUrl, "Phraseanet Authentication");
+					PHRASEA.Tools.popup(authUrl, "Phraseanet Authentication", options.width, options.height);
 				}
 				else {
 					PHRASEA.Tools.redirectTo(authUrl);

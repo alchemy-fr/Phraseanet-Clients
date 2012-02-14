@@ -45,7 +45,7 @@
 			 * @param domain {String} domain
 			 * @param apiKey {String} clé publique
 			 */
-			registerInstance: function (name, domain, apiKey) {
+			registerInstance: function(name, domain, apiKey) {
 				this._instances[name] = new Phraseanet({
 					apiKey: apiKey,
 					domain: domain
@@ -60,7 +60,7 @@
 			 * @param name {String} identifiant
 			 * @return instance de phraseanet ou null
 			 */
-			getInstance: function (name) {
+			getInstance: function(name) {
 				return this._instances[name];
 			},
 
@@ -69,10 +69,10 @@
 			 *
 			 * @param name {String} identifiant
 			 */
-			removeInstance: function (name) {
+			removeInstance: function(name) {
 				var instance = this._instances[name];
 
-				if (instance !== null) {
+				if (instance !== undefined) {
 					instance.clearSession();
 				}
 			},
@@ -86,7 +86,7 @@
 			 *
 			 * @return itérateur sur la liste des instances
 			 */
-			getInstances: function () {
+			getInstances: function() {
 
 				var list = [];
 
@@ -99,7 +99,7 @@
 					map = this._instances;
 
 				return {
-					next: function () {
+					next: function() {
 						var key;
 
 						if (!this.hasNext()) {
@@ -110,7 +110,7 @@
 						return map[key];
 					},
 
-					hasNext: function () {
+					hasNext: function() {
 						return i < length;
 					}
 				};
