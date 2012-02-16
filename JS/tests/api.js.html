@@ -14,6 +14,7 @@
 	    <script type="text/javascript" src="../Phraseanet.js"></script>
 	    <link type="text/css" rel="stylesheet" href="../../vendor/qunit/qunit/qunit.css"/> 
 	    <script>  
+		
 		jQuery(document).ready(function()
 		{
                         
@@ -21,33 +22,33 @@
             
             test("Test Api", function()
             {
-            	var Phrasea = new Phraseanet({
+            	var phrasea = new Phraseanet({
 					apiKey: "123456",
 					domain: "http://my.domain.fr"
 				});
                     
                 // Teste si le path est bien renseigné
-				var path1 = Phrasea._server.addFirstSlash("api/v1/databoxes/list/");				
-				equal(path1, "/api/v1/databoxes/list/", "1er Slash bien ajouté au path");
+				var path1 = PHRASEA.ApiServer.buildUrl(phrasea, "api/v1/databoxes/list/");				
+				equal(path1, "http://my.domain.fr/api/v1/databoxes/list/", "Url correctement construite avec l'ajout du slash");
 				
-				var path2 = Phrasea._server.addFirstSlash("/api/v1/databoxes/list/");
-				equal(path2, "/api/v1/databoxes/list/", "Pas de Slash ajouté au path s'il y en a déjà un");
+				var path2 = PHRASEA.ApiServer.buildUrl(phrasea, "/api/v1/databoxes/list/");
+				equal(path2, "http://my.domain.fr/api/v1/databoxes/list/", "Url correctement construite sans l'ajout du slash");
                 
                 // Teste si une exception est bien levée si la méthode est non renseignée ou mauvaise
 				raises(function()
 				{
-					Phrasea._server.call("/api/v1/databoxes/list/", "", {}, function(){})
+					PHRASEA.ApiServer.call(phrasea, "/api/v1/databoxes/list/", "", {}, function(){})
 				}, "exception levée si method autre que GET ou POST");
 				
 				raises(function()
 				{
-					Phrasea._server.call("/api/v1/databoxes/list/", "titi", {}, function(){})
+					PHRASEA.ApiServer.call(phrasea, "/api/v1/databoxes/list/", "titi", {}, function(){})
 				}, "exception levée si method autre que GET ou POST");
 
 				// Teste si une exception est levée si la fonction callback est mal renseignée
 				raises(function()
 				{
-					Phrasea._server.call("/api/v1/databoxes/list/", "", {}, "hello")
+					PHRASEA.ApiServer.call(phrasea, "/api/v1/databoxes/list/", "", {}, "hello")
 				}, "exception levée si le paramètre callback n'est pas une fonction");
 
             });

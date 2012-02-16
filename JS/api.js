@@ -32,71 +32,74 @@
 (function(window)
 {
 
-    /**
-	 * Constructeur de l'objet API serveur
-	 * 
-	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Cookie
-	 */
-    var ApiServer = function(phraseanet) {
-        this._phraseanet = phraseanet;
-    };
-
-    ApiServer.prototype = {
+    window.PHRASEA.ApiServer = {
 
         /**
 		 * Effectue un appel serveur.
 		 * 
-		 * @param path      {String}   le chemin url
-		 * @param method    {String}   la méthode http (get ou post)
-		 * @param params    {Object}   les paramètres à passer à la requête http
-		 * @param callback  {Function} la fonction callback de retour
+		 * @param phraseanet {Object}   objet phraseanet
+		 * @param path       {String}   le chemin url (relatif)
+		 * @param method     {String}   la méthode http (get ou post)
+		 * @param params     {Object}   les paramètres à passer à la requête http
+		 * @param callback   {Function} la fonction callback de retour
 		 */
-        call: function(path, method, params, callback) {
-            var path = this.addFirstSlash(path);
+        call: function(phraseanet, path, method, params, callback) {
+            var url = this.buildUrl(path);
 
-            var method = method.toLowerCase();
-
-            if (method !== 'get' && method !== 'post') {
-                throw ('Invalid method passed to api(). Only GET or POST method are allowed.');
+			if (method) {
+				method = method.toLowerCase();
+	            if (method !== 'get' && method !== 'post') {
+	                throw ('Invalid method passed to api(). Only GET or POST method are allowed.');
+	            }
             }
+            else
+            	method = 'get'
 
             var params = params || {};
 
             if (typeof callback !== 'function') {
-                throw ('Invalid callback parameter passed to api(). Only a function is allowed.');
+                throw ('Invalid callback parameter passed to ApiServer.call(). Only a function is allowed.');
             }
 
-            return this.oauthRequest(path, method, params, callback);
+            this.oauthRequest(phraseanet, url, method, params, callback);
         },
 
-        addFirstSlash: function(path) {
+		/**
+		 * Construit l'url à requêter
+		 */
+        buildUrl: function(phraseanet, path) {
 	        if (path[0] !== '/') {
-	            path = "/" + path;
+	            return phraseanet.getDomain() + '/' + path;
 	        }
-
-	        return path;
+	        else {
+				return phraseanet.getDomain() + path;
+			}
         },	
 
         /**
 		 * Effectue un appel serveur en lui ajoutant le token d'accès.
 		 * 
-		 * @param path      {String}   le chemin url
-		 * @param method    {String}   la méthode http (get ou post)
-		 * @param params    {Object}   les paramètres à passer à la requête http
-		 * @param callback  {Function} la fonction callback de retour
+		 * @param phraseanet {Object}   objet phraseanet
+		 * @param path       {String}   le chemin url
+		 * @param method     {String}   la méthode http (get ou post)
+		 * @param params     {Object}   les paramètres à passer à la requête http
+		 * @param callback   {Function} la fonction callback de retour
 		 */
-        oauthRequest: function(path, method, params, callback) {
-            var session = this._phraseanet.getSession();
+        oauthRequest: function(phraseanet, url, method, params, callback) {
+            var session = phraseanet.getSession();
 
             if (session && session.oauth_token && !params.oauth_token) {
                 params.oauth_token = session.oauth_token;
             }
 
-            return this.PhrRequest(path, method, params, callback);
+            this.jsonp(url, method, params, callback);
         },
 
-        PhrRequest: function(path, method, params, callback) {
-            var target = this._phraseanet._domain.www + path + "?callback=?";
+		/**
+		 * Effectue un appel serveur en jsonp
+		 */
+        jsonp: function(url, method, params, callback) {
+            var target = url + "?callback=?";
 
             $.ajax({
                 type: method,
@@ -107,7 +110,5 @@
             });
         }
     };
-
-    window.ApiServer = ApiServer;
 
 })(window);

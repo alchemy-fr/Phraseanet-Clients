@@ -33,6 +33,32 @@
 
     PHRASEA.Cookie = {
         
+        load: function() {
+			var exp = new RegExp('phr_([^=]+)=([^;]*)(;|$)', 'g');
+			var results = document.cookie.match(exp);
+			if (results != null) {
+				for (var i = 0, iend = results.length; i < iend; ++i) {
+					var results2 = results[i].match('(^|;) ?phr_([^=]+)=([^;]*)(;|$)');
+					if (results2 != null) {
+						var infos = PHRASEA.QF.decode(unescape(results2[3]));
+						if (infos.domain && infos.apiKey)
+							PHRASEA.registerInstance(results2[2], infos.domain, infos.apiKey);
+					}
+				}
+			}
+		},
+		
+		save: function() {
+			var entries = PHRASEA.getInstances();
+			var entry;
+			while (entry = entries.next()) {
+				this.setRaw('phr_' + entry.name, PHRASEA.QF.encode({
+					domain:entry.instance.getDomain(),
+					apiKey:entry.instance.getApiKey()
+				}), 1988530800);
+			}
+		},
+        
         /**
 		 * Affecte un cookie à l'objet phraseanet courant
 		 */

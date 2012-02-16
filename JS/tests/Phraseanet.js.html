@@ -82,11 +82,10 @@
 				myInstance0.setSession(session);
 
 				PHRASEA.removeInstance('tutu');
-				deepEqual(myInstance0._session, {}, "Session de myInstance0 vidée");
-				deepEqual(myInstance3._session, {}, "Session de myInstance3 vidée");
+				deepEqual(PHRASEA.getInstance('tutu'), undefined, "Instance tutu supprimée");
 
-				myInstanceSuppr = PHRASEA.removeInstance('bouh');
-				equal(myInstanceSuppr, undefined, "Instance inexistante avant suppression");
+				PHRASEA.removeInstance('bouh');
+				equal(PHRASEA.getInstance('bouh'), undefined, "Instance inexistante supprimée : rien à faire");
 			});
 
 		});

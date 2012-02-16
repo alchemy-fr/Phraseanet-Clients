@@ -31,39 +31,30 @@
 
 (function(window) {
 
-    /**
-	 * Constructeur de l'objet Auth
-	 * 
-	 * @param phraseanet {Phraseanet} objet Phraseanet lié à l'objet Auth
-	 */
-    var Auth = function(phraseanet) {
-        this._phraseanet = phraseanet;
-    };
-
-    Auth.prototype = {
+    PHRASEA.Auth = {
 
         /** Construit l'url d'authentification */
-        buildAuthUrl: function(options) {
+        buildAuthUrl: function(phraseanet, options) {
             var options = options || {};
             var auth_params = {
                 redirect_uri: window.location.href,
                 response_type: 'token',
-                client_id: this._phraseanet._apiKey
+                client_id: phraseanet.getApiKey()
             }
             
             //TODO setter un cookie pour dire qu'on est en train de se logguer sur ce phraseanet ?
-			PHRASEA.Cookie.setRaw('phr_login', this._phraseanet.getApiKey(), 1988530800);
+			PHRASEA.Cookie.setRaw('phr_login', phraseanet.getApiKey(), 1988530800);
 
-            return this._phraseanet._domain.authorize + '?' + PHRASEA.QF.encode(jQuery.extend(auth_params, options), '&', true);
+            return phraseanet.getAuthorizeEndpoint() + '?' + PHRASEA.QF.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
-        readFragment: function() {
+        readFragment: function(phraseanet) {
             var fragment;
 			
 			//TODO on est en train de se connecter sur ce phraseanet ?
 			var phr_login = PHRASEA.Cookie.getRaw('phr_login');
-			if (phr_login && phr_login == this._phraseanet.getApiKey()) {
+			if (phr_login && phr_login == phraseanet.getApiKey()) {
 				fragment = PHRASEA.QF.decode(window.location.hash.replace('%23', '#').replace('#', ''));
 				PHRASEA.Cookie.clearRaw('phr_login');
 			}
@@ -85,7 +76,6 @@
                     };
 
                     this._phraseanet.setSession(session);
-                    //this._phraseanet._cookie.set();
 
                     return true;
                 }
@@ -94,7 +84,5 @@
             return false;
         }
     };
-
-    window.Auth = Auth;
 
 })(window);

@@ -50,6 +50,8 @@
 					apiKey: apiKey,
 					domain: domain
 				});
+				
+				PHRASEA.Cookie.save(); // TODO voir si on peut améliorer
 
 				return this._instances[name];
 			},
@@ -65,24 +67,25 @@
 			},
 
 			/**
-			 * Supprime l'instance en cours en vidant la session
+			 * Supprime l'instance de la liste des instances
 			 *
 			 * @param name {String} identifiant
 			 */
 			removeInstance: function(name) {
-				var instance = this._instances[name];
-
-				if (instance !== undefined) {
-					instance.clearSession();
-				}
+				PHRASEA.Cookie.clearRaw('phr_' + name); // TODO créer une fonction pour ça dans Cookie
+				delete this._instances[name];
 			},
 
 			/**
 			 * Retourne un itérateur sur la liste de toutes les instances.
-			 * L'itérateur dispose d'une méthode next() retournant l'instance
+			 * L'itérateur dispose d'une méthode next() retournant l'entrée
 			 * suivante ou null s'il n'y en a plus, et d'une méthode hasNext()
 			 * retournant true/false selon qu'il y ait encore une instance
-			 * de phraseanet ou non
+			 * de phraseanet ou non.
+			 * 
+			 * Une entrée se compose de :
+			 * - name : le nom de l'instance
+			 * - instance : l'instance de phraseanet
 			 *
 			 * @return itérateur sur la liste des instances
 			 */
@@ -107,7 +110,7 @@
 						}
 						key = list[i];
 						i = i + 1;
-						return map[key];
+						return {name:key, instance:map[key]};
 					},
 
 					hasNext: function() {

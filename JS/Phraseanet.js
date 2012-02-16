@@ -68,14 +68,8 @@
         /** Initialise la session */
         this._session = PHRASEA.Cookie.get(this) || {};
 
-        /** Objet d'authentification */
-        this._auth = new Auth(this);
-
-        /** Permet de requêter le serveur */
-        this._server = new ApiServer(this);
-        
        	/** Récupère le fragment contenant le token d'accès */
-		var fragment = this._auth.readFragment();
+		var fragment = PHRASEA.Auth.readFragment(this);
 			
 		/** Initialise la session à partir du fragment obtenu */
 		if (fragment && fragment.access_token) {
@@ -122,23 +116,31 @@
         	this._session = {};
         },
 
-		/** Récupère l'Url d'authentification */
-        getAuthenticationUrl : function(options) {
-            return this._auth.buildAuthUrl(options);  
-        },
-
         /** Retourne le status connecté ou non de l'utilisateur */
         isConnected: function() {
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
+        
+        /** Retourne l'url du domaine */
+        getDomain: function() {
+			return this._domain.www;
+		},
+		
+		getAuthorizeEndpoint: function() {
+			return this._domain.authorize;
+		},
+		
+		getTokenEndpoint: function() {
+			return this._domain.token;
+		},
 
         /** Permet de se connecter */
-        connect: function(options, callback) {
+        connect: function(options) {
 			if (!this.isConnected()) {
 				var options = options || {};
 
 				/** Obtient l'Url d'authentification */
-				var authUrl = this.getAuthenticationUrl(options);
+				var authUrl = PHRASEA.Auth.buildAuthUrl(this, options);
 	
 				/** Ouvre le formulaire d'authentification soit dans une popup,
 				 * soit dans la même page via une redirection (par défaut)
@@ -154,7 +156,12 @@
 
 		/** Permet de faire les requêtes sur le serveur */
 		request: function(path, method, params, callback) {
-			this._server.call(path, method, params, callback);
+			if (!this.isConnected()) {
+				this.connect({display:'popup'});//TODO à tester
+			}
+			else {
+				PHRASEA.ApiServer.call(this, path, method, params, callback);
+			}
 		},
 
         /** Permet à un utilisateur de se déconnecter */
