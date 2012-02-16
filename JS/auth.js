@@ -63,7 +63,7 @@
         },
 
         /** Initialise la session */
-        initSession: function(fragment) {				
+        initSession: function(phraseanet, fragment) {				
             if (fragment) {
                 if ('error' in fragment) {
                     throw ('Received auth error `' + fragment.error + '\': ' + fragment.error_description);
@@ -72,10 +72,10 @@
                 if ('access_token' in fragment) {
                     var session = {
                         oauth_token: fragment.access_token,
-                        user: this._phraseanet._apiKey
+                        user: phraseanet.getApiKey()
                     };
 
-                    this._phraseanet.setSession(session);
+                    phraseanet.setSession(session);
 
                     return true;
                 }
