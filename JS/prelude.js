@@ -72,7 +72,7 @@
 			 * @param name {String} identifiant
 			 */
 			removeInstance: function(name) {
-				PHRASEA.Cookie.clearRaw('phr_' + name); // TODO créer une fonction pour ça dans Cookie
+				PHRASEA.Cookie.clearRaw('phr_' + name); // TODO check fonction pour ça dans Cookie
 				delete this._instances[name];
 			},
 

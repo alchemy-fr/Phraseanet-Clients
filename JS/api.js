@@ -44,7 +44,7 @@
 		 * @param callback   {Function} la fonction callback de retour
 		 */
         call: function(phraseanet, path, method, params, callback) {
-            var url = this.buildUrl(path);
+            var url = this.buildUrl(phraseanet, path);
 
 			if (method) {
 				method = method.toLowerCase();
@@ -91,7 +91,6 @@
             if (session && session.oauth_token && !params.oauth_token) {
                 params.oauth_token = session.oauth_token;
             }
-
             this.jsonp(url, method, params, callback);
         },
 
@@ -107,7 +106,7 @@
                 url: target,
                 data: params,
                 success : callback
-            });
+            });            
         }
     };
 
