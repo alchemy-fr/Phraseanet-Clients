@@ -157,7 +157,7 @@
 		/** Permet de faire les requêtes sur le serveur */
 		request: function(path, method, params, callback) {
 			if (!this.isConnected()) {
-				this.connect({display:'popup'});//TODO à tester
+				this.connect({display:'popup'});
 			}
 			else {
 				PHRASEA.ApiServer.call(this, path, method, params, callback);

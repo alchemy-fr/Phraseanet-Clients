@@ -36,6 +36,7 @@
         load: function() {
 			var exp = new RegExp('phr_([^=]+)=([^;]*)(;|$)', 'g');
 			var results = document.cookie.match(exp);
+
 			if (results != null) {
 				for (var i = 0, iend = results.length; i < iend; ++i) {
 					var results2 = results[i].match('(^|;) ?phr_([^=]+)=([^;]*)(;|$)');
@@ -51,6 +52,7 @@
 		save: function() {
 			var entries = PHRASEA.getInstances();
 			var entry;
+
 			while (entry = entries.next()) {
 				this.setRaw('phr_' + entry.name, PHRASEA.QF.encode({
 					domain:entry.instance.getDomain(),
@@ -77,7 +79,6 @@
 			if (value) {
 				value = PHRASEA.QF.decode(value);
 			}
-			
 			return value || {};
 		},
 		
@@ -117,7 +118,7 @@
 		 */
         clearRaw: function(name) {
 			this.setRaw(name, "", 0);
-//            document.cookie = name + '=""; expires=0; path=/';
+			//document.cookie = name + '=""; expires=0; path=/';
         }
     };
 

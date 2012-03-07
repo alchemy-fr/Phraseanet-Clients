@@ -51,7 +51,7 @@
 					domain: domain
 				});
 				
-				PHRASEA.Cookie.save(); // TODO voir si on peut améliorer
+				PHRASEA.Cookie.save();
 
 				return this._instances[name];
 			},
@@ -72,7 +72,7 @@
 			 * @param name {String} identifiant
 			 */
 			removeInstance: function(name) {
-				PHRASEA.Cookie.clearRaw('phr_' + name); // TODO check fonction pour ça dans Cookie
+				PHRASEA.Cookie.clearRaw('phr_' + name);
 				delete this._instances[name];
 			},
 
@@ -112,7 +112,6 @@
 						i = i + 1;
 						return {name:key, instance:map[key]};
 					},
-
 					hasNext: function() {
 						return i < length;
 					}

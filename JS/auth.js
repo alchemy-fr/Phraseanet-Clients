@@ -42,23 +42,20 @@
                 client_id: phraseanet.getApiKey()
             }
             
-            //TODO setter un cookie pour dire qu'on est en train de se logguer sur ce phraseanet ?
+            /** Setter un cookie pour dire qu'on est en train de se logguer sur le phraseanet courant */
 			PHRASEA.Cookie.setRaw('phr_login', phraseanet.getApiKey(), 1988530800);
-
             return phraseanet.getAuthorizeEndpoint() + '?' + PHRASEA.QF.encode(jQuery.extend(auth_params, options), '&', true);
         },
 
         /** Décode l'url de réponse d'authentification */			
         readFragment: function(phraseanet) {
             var fragment;
-			
-			//TODO on est en train de se connecter sur ce phraseanet ?
 			var phr_login = PHRASEA.Cookie.getRaw('phr_login');
+
 			if (phr_login && phr_login == phraseanet.getApiKey()) {
 				fragment = PHRASEA.QF.decode(window.location.hash.replace('%23', '#').replace('#', ''));
 				PHRASEA.Cookie.clearRaw('phr_login');
 			}
-			
             return fragment;
         },
 
@@ -68,19 +65,15 @@
                 if ('error' in fragment) {
                     throw ('Received auth error `' + fragment.error + '\': ' + fragment.error_description);
                 }
-
                 if ('access_token' in fragment) {
                     var session = {
                         oauth_token: fragment.access_token,
                         user: phraseanet.getApiKey()
                     };
-
                     phraseanet.setSession(session);
-
                     return true;
                 }
             }
-
             return false;
         }
     };
