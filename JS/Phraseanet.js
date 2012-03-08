@@ -118,9 +118,16 @@
 
         /** Retourne le status connecté ou non de l'utilisateur */
         isConnected: function() {
+        	console.log("coucou la session");
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
-        
+
+		/** Set un nouveau token et m.a.j le cookie */
+		setOauthToken: function(oauth_token) {
+          this._session.oauth_token = oauth_token;
+          PHRASEA.Cookie.set(this, this._session);
+        },
+
         /** Retourne l'url du domaine */
         getDomain: function() {
 			return this._domain.www;
