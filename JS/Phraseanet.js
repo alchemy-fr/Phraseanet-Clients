@@ -36,41 +36,41 @@
 	* @param {String}	options.domain	Url de l'application
 	*/	 
     window.Phraseanet = function(options) {
-
+    
         /** Vérifie la présence des paramètres requis */
-
+        
         var options = options || {};
-
+        
         if ("apiKey" in options === false) {
             throw ("You must provide an api key to use phraseanet API");
         }		
-
+        
         if ("domain" in options === false) {
             throw ("Missing domain argument for phraseanet object");
         }
-
+        
         if (typeof options !== 'object') {
             throw ('Invalid options for phraseanet object');
         }
-
+        
         /** Initialise les propriétés de l'objet Phraseanet */
-
+        
         this._apiKey = options.apiKey;
-
+        
         var domain = options.domain.replace(/\/$/, '');
-
+        
         this._domain = {
-            www: domain,
-            authorize: domain + "/api/oauthv2/authorize",
-            token: domain + "/api/oauthv2/token"
+        	www: domain,
+        	authorize: domain + "/api/oauthv2/authorize",
+        	token: domain + "/api/oauthv2/token"
         };
-
+        
         /** Initialise la session */
         this._session = PHRASEA.Cookie.get(this) || {};
-
+        
        	/** Récupère le fragment contenant le token d'accès */
 		var fragment = PHRASEA.Auth.readFragment(this);
-			
+		
 		/** Initialise la session à partir du fragment obtenu */
 		if (fragment && fragment.access_token) {
 			this._session.oauth_token = fragment.access_token; //TODO à améliorer ?
@@ -80,67 +80,68 @@
 
     /** Prototype de l'objet Phraseanet */
     Phraseanet.prototype = {
-
+    
         /** Version de l'api */		 		
         _version: '1.0',
-
+        
         /** Retourne la version de l'api */
         getVersion: function() {
             return this._version;
         },
-
+        
         /** Retourne la ClientID */
         getApiKey: function() {
 			return this._apiKey;
 		},
-
+		
         /** Initialise la session */
 		initSession: function(session) {
 			if (session && session.oauth_token) {
 				this._session.oauth_token = session.oauth_token;
 			}
 		},
-
+		
         /** Set l'objet session courant */
         setSession: function(session) {
             this._session = session;
         },
-
+        
         /** Récupère l'objet session courant */
         getSession: function() {
             return this._session;
         },
-
+        
 		/** Vide l'objet session courant */
         clearSession: function() {
         	this._session = {};
         },
-
+        
         /** Retourne le status connecté ou non de l'utilisateur */
         isConnected: function() {
         	console.log("coucou la session");
             return "oauth_token" in this._session && this._session.oauth_token !== null;
         },
-
+        
 		/** Set un nouveau token et m.a.j le cookie */
 		setOauthToken: function(oauth_token) {
           this._session.oauth_token = oauth_token;
           PHRASEA.Cookie.set(this, this._session);
         },
-
+        
         /** Retourne l'url du domaine */
         getDomain: function() {
 			return this._domain.www;
 		},
-
+		
+		/** Retourne les EndPoints */
 		getAuthorizeEndpoint: function() {
 			return this._domain.authorize;
 		},
-
+		
 		getTokenEndpoint: function() {
 			return this._domain.token;
 		},
-
+		
         /** Permet de se connecter */
         connect: function(options) {
 			if (!this.isConnected()) {
@@ -160,7 +161,7 @@
 				}
 			}
 		},
-
+		
 		/** Permet de faire les requêtes sur le serveur */
 		request: function(path, method, params, callback) {
 			if (!this.isConnected()) {
@@ -170,13 +171,13 @@
 				PHRASEA.ApiServer.call(this, path, method, params, callback);
 			}
 		},
-
+		
         /** Permet à un utilisateur de se déconnecter */
         logout: function() {
             PHRASEA.Cookie.clear(this);
             this.clearSession();
         }
-
+        
     };
-
+    
 })(window);
