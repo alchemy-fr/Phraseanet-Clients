@@ -88,12 +88,12 @@
         getVersion: function() {
             return this._version;
         },
-        
+
         /** Retourne la ClientID */
         getApiKey: function() {
 			return this._apiKey;
 		},
-		
+
         /** Initialise la session */
 		initSession: function(session) {
 			if (session && session.oauth_token) {
@@ -132,11 +132,11 @@
         getDomain: function() {
 			return this._domain.www;
 		},
-		
+
 		getAuthorizeEndpoint: function() {
 			return this._domain.authorize;
 		},
-		
+
 		getTokenEndpoint: function() {
 			return this._domain.token;
 		},
