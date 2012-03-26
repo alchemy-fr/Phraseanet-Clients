@@ -34,12 +34,7 @@
 				var path2 = PHRASEA.ApiServer.buildUrl(phrasea, "/api/v1/databoxes/list/");
 				equal(path2, "http://my.domain.fr/api/v1/databoxes/list/", "Url correctement construite sans l'ajout du slash");
                 
-                // Teste si une exception est bien levée si la méthode est non renseignée ou mauvaise
-				raises(function()
-				{
-					PHRASEA.ApiServer.call(phrasea, "/api/v1/databoxes/list/", "", {}, function(){})
-				}, "exception levée si method autre que GET ou POST");
-				
+                // Teste si une exception est bien levée si la méthode est mal renseignée
 				raises(function()
 				{
 					PHRASEA.ApiServer.call(phrasea, "/api/v1/databoxes/list/", "titi", {}, function(){})
